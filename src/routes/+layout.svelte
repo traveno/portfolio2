@@ -19,7 +19,7 @@
     
     let backgroundEnabled = true;
 
-    let analyticsId = import.meta.env.VERCEL_ANALYTICS_IDS;
+    let analyticsId = import.meta.env.VERCEL_ANALYTICS_ID;
     $: if (browser && analyticsId) webVitals({ path: $page.url.pathname, params: $page.params, analyticsId });
 
     function mouseMoved(event: MouseEvent) {
