@@ -146,7 +146,7 @@
 <AmbientLight intensity={0.2} />
 
 <Group rotation={{ x: groupRotation, z: groupRotation }}>
-        <!-- Floor -->
+    <!-- Floor -->
     <Mesh
     receiveShadow
     rotation={{ x: -90 * (Math.PI / 180) }}

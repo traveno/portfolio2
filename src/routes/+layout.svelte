@@ -3,14 +3,19 @@
     import { Canvas, T, type Position, FogExp2 } from '@threlte/core';
     import * as THREE from "three";
     import { World, RigidBody, AutoColliders, Collider, Attractor } from '@threlte/rapier';
+    
     import PageTransition from '$lib/components/PageTransition.svelte';
     import type { LayoutServerData } from './$types';
     import { page } from '$app/stores';
     import { loadingComplete } from '$lib/stores/data';
     import { fade, scale } from 'svelte/transition';
     import { randomHexColor } from '$lib/helpers';
-    import { browser } from '$app/environment';
+    import { browser, dev } from '$app/environment';
+    
+    // Vercel analytics
     import { webVitals } from '$lib/vitals';
+    import { inject } from '@vercel/analytics';
+    inject({ mode: dev ? 'development' : 'production' });
 
     export let data: LayoutServerData;
 
