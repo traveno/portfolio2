@@ -126,7 +126,7 @@
                     {/each}
                 </T.Group>
 
-                <Fog color={'#000'} near={25} far={50} />
+                <Fog color={'#000'} near={25} far={75} />
             </World>
         </Canvas>
     </div>

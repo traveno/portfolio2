@@ -6,5 +6,8 @@ export default defineConfig({
 	plugins: [
 		{ ...threeMinifier(), enforce: "pre" },
 		sveltekit()
-	]
+	],
+	ssr: {
+		noExternal: ['three', 'troika-three-text']
+	}
 });
