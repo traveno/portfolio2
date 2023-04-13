@@ -68,7 +68,7 @@
     }
 </script>
 
-<div class="relative rounded-lg aspect-video overflow-hidden border-warning" bind:clientWidth={containerWidth} bind:clientHeight={containerHeight}>
+<div class="relative lg:rounded-lg aspect-video overflow-hidden border-warning" bind:clientWidth={containerWidth} bind:clientHeight={containerHeight}>
     <div class="absolute w-full h-full">
         <Canvas>
             <Scene bind:this={primaryScene} />

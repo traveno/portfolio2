@@ -6,7 +6,6 @@
     import PageTransition from '$lib/components/PageTransition.svelte';
     import type { LayoutServerData } from './$types';
     import { page } from '$app/stores';
-    import { RectAreaLightUniformsLib } from 'three/examples/jsm/lights/RectAreaLightUniformsLib';
 
     export let data: LayoutServerData;
 
@@ -47,16 +46,14 @@
     }
 </script>
 
-<main on:mousemove={event => mouseMoved(event)} on:mouseleave={mouseLeave} class="bg-base-100 bg-transparent min-h-full">
-    
+<main on:mousemove={event => mouseMoved(event)} on:mouseleave={mouseLeave} class="h-full">
     <!-- Main content container -->
-    <div class="container mx-auto lg:max-w-screen-lg">
-        
-        <div class="flex flex-col h-full justify-start space-y-8 py-16">
+    <div class="mx-auto lg:max-w-screen-lg overflow-hidden z-10">
+        <div class="flex flex-col justify-start lg:space-y-8 lg:py-16">
             <!-- Navbar -->
-            <div class="navbar justify-center items-center bg-base-100 rounded-lg bg-opacity-75">
+            <div class="navbar justify-center items-center lg:bg-base-100/50 lg:rounded-lg lg:backdrop-blur bg-transparent backdrop-blur-0">
                 <div class="navbar-start">
-                    <button class="btn btn-ghost {backgroundEnabled ? 'text-success' : 'text-warning'}" on:click={() => backgroundEnabled = !backgroundEnabled}>
+                    <button class="hidden md:block btn btn-ghost {backgroundEnabled ? 'text-success' : 'text-warning'}" on:click={() => backgroundEnabled = !backgroundEnabled}>
                         Physics {backgroundEnabled ? 'On' : 'Off'}
                     </button>
                 </div>
@@ -73,13 +70,11 @@
                     </a>
                 </div>
             </div>
-
             <!-- Content -->
             <PageTransition pathname={data.pathname}>
                 <slot />
-
                 <!-- Footer -->
-                <div class="flex flex-row justify-between pt-8">
+                <div class="flex flex-row justify-between p-8 lg:px-0">
                     <div class="text-sm italic">last updated April 13, 2023</div>
                     <div class="text-sm italic">
                         created using <a href="https://kit.svelte.dev/" target="_blank" class="text-accent">SvelteKit</a>,
@@ -91,8 +86,11 @@
         </div>
     </div>
 
+    <!-- Mobile blur -->
+    <div class="w-full h-full fixed top-0 left-0 right-0 bottom-0 -z-10 bg-base-100/50 lg:bg-transparent backdrop-blur lg:backdrop-blur-0"></div>
+
     <!-- Background graphics -->
-    <div class="w-full h-full fixed top-0 left-0 bottom-0 -z-10 bg-black">
+    <div class="w-full h-full fixed top-0 left-0 right-0 bottom-0 -z-20 bg-black">
         <Canvas>
             <World gravity={{ x: 0, y: 0, z: 0 }}>
                 <Attractor position={attractorPosition} strength={backgroundEnabled ? 5 : 0} range={1000} />

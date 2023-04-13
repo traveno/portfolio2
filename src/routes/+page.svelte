@@ -6,7 +6,7 @@
     <title>about me</title>
 </svelte:head>
 
-<div class="flex flex-col justify-start bg-base-100 p-8 rounded-lg bg-opacity-75 space-y-8">
+<div class="flex flex-col justify-start lg:bg-base-100/50 lg:p-8 lg:rounded-lg lg:backdrop-blur space-y-8 pt-8">
     <Demo3D />
     <div class="divider"></div>
     <article class="prose w-full max-w-full">
