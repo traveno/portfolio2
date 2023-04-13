@@ -89,11 +89,12 @@
     </div>
 
     <!-- Loading splash -->
-    {#if !$loadingComplete}
+    {#if $loadingComplete}
     <div class="w-full h-full fixed top-0 left-0 right-0 bottom-0 bg-black z-20" out:fade={{ duration: 500, delay: 250 }}>
-        <div class="flex flex-col justify-center items-center h-full">
-            <div class="scale-50"><img src="/sf.png" id="initials" alt="my initials" out:scale={{ start: 2, duration: 500 }} /></div>
-            <!-- <div class="text-3xl font-bold">Loading</div> -->
+        <div class="flex flex-col justify-between items-center h-full relative">
+            <div class="grow flex-1"></div>
+            <div class="flex-1 w-40 flex flex-col justify-center"><img src="/sf.png" id="initials" alt="my initials" out:scale={{ start: 2, duration: 500 }} /></div>
+            <div class="flex-1 text-2xl font-mono p-0 flex flex-col justify-end lg:justify-start pb-24"><span>loading assets...</span></div>
         </div>
     </div> 
     {/if}
