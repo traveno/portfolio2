@@ -89,7 +89,7 @@
     </div>
 
     <!-- Loading splash -->
-    {#if $loadingComplete}
+    {#if !$loadingComplete}
     <div class="w-full h-full fixed top-0 left-0 right-0 bottom-0 bg-black z-20" out:fade={{ duration: 500, delay: 250 }}>
         <div class="flex flex-col justify-between items-center h-full relative">
             <div class="grow flex-1"></div>
