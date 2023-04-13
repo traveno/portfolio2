@@ -1,29 +1,24 @@
 <script lang="ts">
     import '../app.css';
-    import { Canvas, T, type Position } from '@threlte/core';
-    import { Fog } from '@threlte/core';
-    import { Camera, Mesh, PerspectiveCamera, Vector2, Vector3 } from "three";
+    import { Canvas, T, type Position, FogExp2, LightInstance, Three } from '@threlte/core';
+    import * as THREE from "three";
     import { World, RigidBody, AutoColliders, Collider, Attractor } from '@threlte/rapier';
-	import { spring } from 'svelte/motion';
-    
-    import { page } from '$app/stores';
     import PageTransition from '$lib/components/PageTransition.svelte';
-    import { fly } from 'svelte/transition';
     import type { LayoutServerData } from './$types';
+    import { page } from '$app/stores';
+    import { RectAreaLightUniformsLib } from 'three/examples/jsm/lights/RectAreaLightUniformsLib';
 
     export let data: LayoutServerData;
 
-    const scale = spring(1)
-
-    let sceneCamera: PerspectiveCamera;
-    let attractorPosition: Position = new Vector3(0, 0, 0);
+    let sceneCamera: THREE.PerspectiveCamera;
+    let attractorPosition: Position = new THREE.Vector3(0, 0, 0);
     
     let backgroundEnabled = true;
 
     function mouseMoved(event: MouseEvent) {
         if (!backgroundEnabled || !sceneCamera) return;
 
-        let mousePosition3D = new Vector3(
+        let mousePosition3D = new THREE.Vector3(
              (event.clientX / window.innerWidth)  * 2 - 1,
             -(event.clientY / window.innerHeight) * 2 + 1,
             0.5
@@ -40,7 +35,7 @@
     function mouseLeave() {
         if (!backgroundEnabled) return;
 
-        attractorPosition = new Vector3(0, 0, 0) as Position;
+        attractorPosition = new THREE.Vector3(0, 0, 0) as Position;
     }
 
     function randomColor(): string {
@@ -52,7 +47,7 @@
     }
 </script>
 
-<main on:mousemove={event => mouseMoved(event)} on:mouseleave={mouseLeave} class="bg-base-300 bg-opacity-50 min-h-full">
+<main on:mousemove={event => mouseMoved(event)} on:mouseleave={mouseLeave} class="bg-base-100 bg-transparent min-h-full">
     
     <!-- Main content container -->
     <div class="container mx-auto lg:max-w-screen-lg">
@@ -93,8 +88,6 @@
                     </div>
                 </div>
             </PageTransition>
-
-            
         </div>
     </div>
 
@@ -105,8 +98,9 @@
                 <Attractor position={attractorPosition} strength={backgroundEnabled ? 5 : 0} range={1000} />
                 <T.PerspectiveCamera bind:ref={sceneCamera} makeDefault position={[0, 0, 50]} fov={24}>
                 </T.PerspectiveCamera>
-                <T.DirectionalLight castShadow position={[15, 15, 15]} />
-                <!-- <T.DirectionalLight position={[-3, 10, -10]} intensity={0.2} /> -->
+                <T.DirectionalLight position={[15, 15, 15]} />
+                <!-- <T.DirectionalLight position={[-3, 10, -10]} intensity={0.2} color={'0xf00'} /> -->
+                <!-- <T.PointLight position={[15, 15, 0]} color={'#f00'} intensity={5} /> -->
                 <T.AmbientLight intensity={0.5} />
 
                 <Collider shape="ball" args={[7]} position={attractorPosition} />
@@ -117,7 +111,7 @@
                     <RigidBody position={{ x: Math.sin(Math.PI * i / 6) * 12, y: Math.cos(Math.PI * i / 6) * 12, z: i * -2 }} scale={3} 
                         linearDamping={3} lockRotations={!backgroundEnabled} lockTranslations={!backgroundEnabled}>
                         <AutoColliders shape="ball" density="1" mass="1" friction="1">
-                            <T.Mesh castShadow>
+                            <T.Mesh>
                                 <T.SphereGeometry />
                                 <T.MeshStandardMaterial color={randomColor()} />
                             </T.Mesh>
@@ -126,8 +120,10 @@
                     {/each}
                 </T.Group>
 
-                <Fog color={'#000'} near={25} far={75} />
+                
             </World>
+            <FogExp2 color={'#000'} density={0.02} />
+            <!-- <FogExp2 color={'#f00'} density={0.01} /> -->
         </Canvas>
     </div>
 </main>
