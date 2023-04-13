@@ -1,13 +1,16 @@
 <script lang="ts">
     import '../app.css';
-    import { Canvas, T, type Position, FogExp2, LightInstance, Three } from '@threlte/core';
+    import { Canvas, T, type Position, FogExp2 } from '@threlte/core';
     import * as THREE from "three";
     import { World, RigidBody, AutoColliders, Collider, Attractor } from '@threlte/rapier';
     import PageTransition from '$lib/components/PageTransition.svelte';
     import type { LayoutServerData } from './$types';
-    import { navigating, page } from '$app/stores';
+    import { page } from '$app/stores';
     import { loadingComplete } from '$lib/stores/data';
     import { fade, scale } from 'svelte/transition';
+    import { randomHexColor } from '$lib/helpers';
+    import { browser } from '$app/environment';
+    import { webVitals } from '$lib/vitals';
 
     export let data: LayoutServerData;
 
@@ -15,6 +18,9 @@
     let attractorPosition: Position = new THREE.Vector3(0, 0, 0);
     
     let backgroundEnabled = true;
+
+    let analyticsId = import.meta.env.VERCEL_ANALYTICS_IDS;
+    $: if (browser && analyticsId) webVitals({ path: $page.url.pathname, params: $page.params, analyticsId });
 
     function mouseMoved(event: MouseEvent) {
         if (!backgroundEnabled || !sceneCamera) return;
@@ -35,16 +41,7 @@
 
     function mouseLeave() {
         if (!backgroundEnabled) return;
-
         attractorPosition = new THREE.Vector3(0, 0, 0) as Position;
-    }
-
-    function randomColor(): string {
-        var letters = '0123456789ABCDEF';
-        var color = '#';
-        for (var i = 0; i < 6; i++)
-            color += letters[Math.floor(Math.random() * 16)];
-        return color;
     }
 </script>
 
@@ -125,7 +122,7 @@
                         <AutoColliders shape="ball" density="1" mass="1" friction="1">
                             <T.Mesh>
                                 <T.SphereGeometry />
-                                <T.MeshStandardMaterial color={randomColor()} />
+                                <T.MeshStandardMaterial color={randomHexColor()} />
                             </T.Mesh>
                         </AutoColliders>
                     </RigidBody>

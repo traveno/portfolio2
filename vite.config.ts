@@ -7,6 +7,9 @@ export default defineConfig({
 		{ ...threeMinifier(), enforce: "pre" },
 		sveltekit()
 	],
+	define: {
+		'import.meta.env.VERCEL_ANALYTICS_ID': JSON.stringify(process.env.VERCEL_ANALYTICS_ID)
+	},
 	ssr: {
 		noExternal: ['three', 'troika-three-text']
 	}
