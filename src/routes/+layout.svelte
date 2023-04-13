@@ -90,7 +90,7 @@
 
     <!-- Loading splash -->
     {#if !$loadingComplete}
-    <div class="w-full h-full fixed top-0 left-0 right-0 bottom-0 bg-black" out:fade={{ duration: 500, delay: 250 }}>
+    <div class="w-full h-full fixed top-0 left-0 right-0 bottom-0 bg-black z-20" out:fade={{ duration: 500, delay: 250 }}>
         <div class="flex flex-col justify-center items-center h-full">
             <div class="scale-50"><img src="/sf.png" id="initials" alt="my initials" out:scale={{ start: 2, duration: 500 }} /></div>
             <!-- <div class="text-3xl font-bold">Loading</div> -->
