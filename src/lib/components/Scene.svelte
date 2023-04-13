@@ -98,6 +98,7 @@
     const groupRotationSpeed = tweened(0, {duration: 3000, easing: cubicOut} );
 
     const cameraZoom = spring(35);
+    export let cameraZoomScale = 0.5;
 
     useFrame(() => {
         torusRotation += 0.03;
@@ -137,7 +138,7 @@
     tubeGeometry.rotateX(Math.PI * -.5);
 </script>
 
-<OrthographicCamera position={{ x: 25, y: 25, z: 25 }}  lookAt={{ x: 0, y: 0, z: 0 }} zoom={$cameraZoom} near={5} far={500} >
+<OrthographicCamera position={{ x: 25, y: 25, z: 25 }}  lookAt={{ x: 0, y: 0, z: 0 }} zoom={$cameraZoom * cameraZoomScale} near={5} far={500}>
 </OrthographicCamera>
 
 <DirectionalLight shadow position={{ x: 3, y: 5, z: 0 }} target={{ x: 0, y: 0, z: 0 }}/>

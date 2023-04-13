@@ -5,8 +5,8 @@
     import { delay } from '$lib/helpers';
     import { createEventDispatcher } from 'svelte';
 
-    let containerWidth: number;
-    let containerHeight : number;
+    let windowWidth: number;
+    let windowHeight : number;
 
     let primaryScene: Scene;
     let overlayScene: OverlayScene;
@@ -14,6 +14,12 @@
     let splashVisible = true;
 
     const dispatch = createEventDispatcher();
+
+    let zoomScale: number | undefined;
+
+    $: if (windowWidth && windowHeight) {
+        zoomScale = (windowWidth / windowHeight) < 0.6 ? 0.6 : 1;
+    }
 
 
     async function runDemoSequence() {
@@ -71,17 +77,21 @@
     }
 </script>
 
-<div class="relative lg:rounded-lg aspect-video overflow-hidden border-warning" bind:clientWidth={containerWidth} bind:clientHeight={containerHeight}>
+<svelte:window bind:innerWidth={windowWidth} bind:innerHeight={windowHeight} />
+
+<div class="relative lg:rounded-lg aspect-video overflow-hidden border-warning">
+    {#if zoomScale !== undefined}
     <div class="absolute w-full h-full">
         <Canvas>
-            <Scene bind:this={primaryScene} />
+            <Scene bind:this={primaryScene} cameraZoomScale={zoomScale} />
         </Canvas>
     </div>
     <div class="absolute w-full h-full">
         <Canvas>
-            <OverlayScene bind:this={overlayScene} on:loaded={() => dispatch('loaded')} />
+            <OverlayScene bind:this={overlayScene} on:loaded={() => dispatch('loaded')} cameraZoomScale={zoomScale} />
         </Canvas>
     </div>
+    {/if}
     {#if splashVisible}
     <div class="absolute w-full h-full z-10 bg-base-100/25 backdrop-blur flex flex-col justify-center items-center">
         <button class="btn btn-warning btn-lg btn-outline" on:click={() => runDemoSequence()}>Run 3D Demo</button>

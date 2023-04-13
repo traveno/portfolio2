@@ -55,6 +55,8 @@
     }
 
     const cameraZoom = spring(50);
+    export let cameraZoomScale = 0.5;
+
     const cameraX = tweened(25, {duration: 400, easing: cubicOut} );
     const cameraY = tweened(25, {duration: 400, easing: cubicOut} );
     const cameraZ = tweened(25, {duration: 400, easing: cubicOut} );
@@ -64,7 +66,7 @@
     const lookAtZ = tweened(-5, {duration: 400, easing: cubicOut} );
 </script>
 
-<OrthographicCamera position={{ x: $cameraX, y: $cameraY, z: $cameraZ }}  lookAt={{ x: $lookAtX, y: $lookAtY, z: $lookAtZ }} zoom={$cameraZoom} near={5} far={500} >
+<OrthographicCamera position={{ x: $cameraX, y: $cameraY, z: $cameraZ }}  lookAt={{ x: $lookAtX, y: $lookAtY, z: $lookAtZ }} zoom={$cameraZoom * cameraZoomScale} near={5} far={500} >
 </OrthographicCamera>
 
 <DirectionalLight shadow position={{ x: 3, y: 5, z: -5 }} target={{ x: 0, y: 0, z: -5 }}/>
