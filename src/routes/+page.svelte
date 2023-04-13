@@ -11,12 +11,12 @@
 
 <div class="flex flex-col justify-start lg:bg-base-100/50 lg:p-8 lg:rounded-lg lg:backdrop-blur space-y-8 pt-8">
     <Demo3D on:loaded={() => loadingComplete.set(true)} />
-    <div class="divider"></div>
+    <div class="divider hidden lg:flex"></div>
     <article class="prose w-full max-w-full">
         <h1 class="text-center">Hey, I'm Stephen!</h1>
     </article>
 
-    <div class="flex flex-col space-y-8">
+    <div class="flex flex-col space-y-8 px-8">
         <article class="prose">
             <h2 class="italic">my interests</h2>
             <ul>
@@ -26,7 +26,7 @@
             </ul>
         </article>
 
-        <div class="grid grid-cols-2 gap-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <div>
                 <article class="prose">
                     <h2 class="italic">current employment</h2>
