@@ -18,7 +18,7 @@
     let zoomScale: number | undefined;
 
     $: if (windowWidth && windowHeight) {
-        if (zoomScale === undefined) zoomScale = (windowWidth / windowHeight) < 0.75 ? 0.6 : 1;
+        if (zoomScale === undefined) zoomScale = (windowWidth / windowHeight) < 0.75 ? 0.4 : 1;
     }
 
 
@@ -80,7 +80,7 @@
 <svelte:window bind:innerWidth={windowWidth} bind:innerHeight={windowHeight} />
 
 <div class="relative lg:rounded-lg aspect-video overflow-hidden border-warning">
-    <p>{zoomScale} {(windowWidth / windowHeight)}</p>
+    <!-- <p>{zoomScale} {(windowWidth / windowHeight)}</p> -->
     {#if zoomScale !== undefined}
     <div class="absolute w-full h-full">
         <Canvas>
