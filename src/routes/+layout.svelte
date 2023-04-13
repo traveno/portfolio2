@@ -5,7 +5,9 @@
     import { World, RigidBody, AutoColliders, Collider, Attractor } from '@threlte/rapier';
     import PageTransition from '$lib/components/PageTransition.svelte';
     import type { LayoutServerData } from './$types';
-    import { page } from '$app/stores';
+    import { navigating, page } from '$app/stores';
+    import { loadingComplete } from '$lib/stores/data';
+    import { fade, scale } from 'svelte/transition';
 
     export let data: LayoutServerData;
 
@@ -74,7 +76,7 @@
             <PageTransition pathname={data.pathname}>
                 <slot />
                 <!-- Footer -->
-                <div class="flex flex-row justify-between p-8 lg:px-0">
+                <div class="flex flex-row justify-between p-8 lg:pß-0">
                     <div class="text-sm italic">last updated April 13, 2023</div>
                     <div class="text-sm italic">
                         created using <a href="https://kit.svelte.dev/" target="_blank" class="text-accent">SvelteKit</a>,
@@ -85,6 +87,17 @@
             </PageTransition>
         </div>
     </div>
+
+    <!-- Loading splash -->
+    {#if !$loadingComplete}
+    <div class="w-full h-full fixed top-0 left-0 right-0 bottom-0 bg-black" out:fade={{ duration: 500, delay: 250 }}>
+        <div class="flex flex-col justify-center items-center h-full">
+            <div class="scale-50"><img src="/sf.png" id="initials" alt="my initials" out:scale={{ start: 2, duration: 500 }} /></div>
+            <!-- <div class="text-3xl font-bold">Loading</div> -->
+        </div>
+    </div> 
+    {/if}
+    
 
     <!-- Mobile blur -->
     <div class="w-full h-full fixed top-0 left-0 right-0 bottom-0 -z-10 bg-base-100/50 lg:bg-transparent backdrop-blur lg:backdrop-blur-0"></div>
@@ -125,3 +138,21 @@
         </Canvas>
     </div>
 </main>
+
+<style>
+    #initials {
+        animation-name: spin;
+        animation-duration: 5000ms;
+        animation-iteration-count: infinite;
+        animation-timing-function: linear; 
+    }
+
+    @keyframes spin {
+    from {
+        transform:rotate(0deg);
+    }
+    to {
+        transform:rotate(360deg);
+    }
+}
+</style>

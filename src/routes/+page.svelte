@@ -1,13 +1,16 @@
 <script>
     import Demo3D from "$lib/components/Demo3D.svelte";
+    import { loadingComplete } from "$lib/stores/data";
+    import { createEventDispatcher } from "svelte";
 
+    const dispatch = createEventDispatcher();
 </script>
 <svelte:head>
     <title>about me</title>
 </svelte:head>
 
 <div class="flex flex-col justify-start lg:bg-base-100/50 lg:p-8 lg:rounded-lg lg:backdrop-blur space-y-8 pt-8">
-    <Demo3D />
+    <Demo3D on:loaded={() => loadingComplete.set(true)} />
     <div class="divider"></div>
     <article class="prose w-full max-w-full">
         <h1 class="text-center">Hey, I'm Stephen!</h1>

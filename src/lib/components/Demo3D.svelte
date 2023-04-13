@@ -3,6 +3,7 @@
     import Scene from './Scene.svelte';
     import OverlayScene from './OverlayScene.svelte';
     import { delay } from '$lib/helpers';
+    import { createEventDispatcher } from 'svelte';
 
     let containerWidth: number;
     let containerHeight : number;
@@ -11,6 +12,8 @@
     let overlayScene: OverlayScene;
 
     let splashVisible = true;
+
+    const dispatch = createEventDispatcher();
 
 
     async function runDemoSequence() {
@@ -76,7 +79,7 @@
     </div>
     <div class="absolute w-full h-full">
         <Canvas>
-            <OverlayScene bind:this={overlayScene} />
+            <OverlayScene bind:this={overlayScene} on:loaded={() => dispatch('loaded')} />
         </Canvas>
     </div>
     {#if splashVisible}
@@ -84,5 +87,4 @@
         <button class="btn btn-warning btn-lg btn-outline" on:click={() => runDemoSequence()}>Run 3D Demo</button>
     </div>
     {/if}
-    
 </div>

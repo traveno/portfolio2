@@ -7,7 +7,7 @@
     } from '@threlte/core'
     import { spring, tweened } from 'svelte/motion';
     import { cubicOut } from 'svelte/easing';
-    import { createEventDispatcher, onMount } from 'svelte';
+    import { createEventDispatcher } from 'svelte';
     import Keyboard from './Keyboard.svelte';
     
     const dispatch = createEventDispatcher();
@@ -16,9 +16,6 @@
     const loaded = () => dispatch('loaded');
 
     let keyboard: Keyboard;
-
-    onMount(() => {
-    });
 
     function keyboardLoaded() {
         loaded();
