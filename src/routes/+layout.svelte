@@ -130,13 +130,4 @@
             </World>
         </Canvas>
     </div>
-
-    <!-- Botton right corner background toggle -->
-    <!-- <div class="fixed bottom-0 right-0">
-        <div class="p-8">
-            <button class="btn btn-outline {backgroundEnabled ? 'btn-warning' : 'btn-error'}" on:click={() => backgroundEnabled = !backgroundEnabled}>
-                Background {backgroundEnabled ? 'On' : 'Off'}
-            </button>
-        </div>
-    </div> -->
 </main>
