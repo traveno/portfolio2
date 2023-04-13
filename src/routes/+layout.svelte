@@ -1,0 +1,142 @@
+<script lang="ts">
+    import '../app.css';
+    import { Canvas, T, type Position } from '@threlte/core';
+    import { Fog } from '@threlte/core';
+    import { Camera, Mesh, PerspectiveCamera, Vector2, Vector3 } from "three";
+    import { World, RigidBody, AutoColliders, Collider, Attractor } from '@threlte/rapier';
+	import { spring } from 'svelte/motion';
+    
+    import { page } from '$app/stores';
+    import PageTransition from '$lib/components/PageTransition.svelte';
+    import { fly } from 'svelte/transition';
+    import type { LayoutServerData } from './$types';
+
+    export let data: LayoutServerData;
+
+    const scale = spring(1)
+
+    let sceneCamera: PerspectiveCamera;
+    let attractorPosition: Position = new Vector3(0, 0, 0);
+    
+    let backgroundEnabled = true;
+
+    function mouseMoved(event: MouseEvent) {
+        if (!backgroundEnabled || !sceneCamera) return;
+
+        let mousePosition3D = new Vector3(
+             (event.clientX / window.innerWidth)  * 2 - 1,
+            -(event.clientY / window.innerHeight) * 2 + 1,
+            0.5
+        );
+
+        mousePosition3D.unproject(sceneCamera);
+        let direction = mousePosition3D.sub(sceneCamera.position).normalize();
+        let distance = -sceneCamera.position.z / direction.z;
+        let position = sceneCamera.position.clone().add(direction.multiplyScalar(distance));
+
+        attractorPosition = position as Position;
+    }
+
+    function mouseLeave() {
+        if (!backgroundEnabled) return;
+
+        attractorPosition = new Vector3(0, 0, 0) as Position;
+    }
+
+    function randomColor(): string {
+        var letters = '0123456789ABCDEF';
+        var color = '#';
+        for (var i = 0; i < 6; i++)
+            color += letters[Math.floor(Math.random() * 16)];
+        return color;
+    }
+</script>
+
+<main on:mousemove={event => mouseMoved(event)} on:mouseleave={mouseLeave} class="bg-base-300 bg-opacity-50 min-h-full">
+    
+    <!-- Main content container -->
+    <div class="container mx-auto lg:max-w-screen-lg">
+        
+        <div class="flex flex-col h-full justify-start space-y-8 py-16">
+            <!-- Navbar -->
+            <div class="navbar justify-center items-center bg-base-100 rounded-lg bg-opacity-75">
+                <div class="navbar-start">
+                    <button class="btn btn-ghost {backgroundEnabled ? 'text-success' : 'text-warning'}" on:click={() => backgroundEnabled = !backgroundEnabled}>
+                        Physics {backgroundEnabled ? 'On' : 'Off'}
+                    </button>
+                </div>
+                <div class="navbar-center">
+                    <ul class="menu menu-horizontal px-1">
+                        <li><a href="/" class:text-accent={$page.url.pathname === '/'}>about</a></li>
+                        <li><a href="/projects" class:text-accent={$page.url.pathname === '/projects'}>projects</a></li>
+                        <li><a href="/contact" class:text-accent={$page.url.pathname === '/contact'}>contact</a></li>
+                    </ul>
+                </div>
+                <div class="navbar-end">
+                    <a href="https://github.com/traveno" target="_blank" class="tooltip" data-tip="Github">
+                        <svg class="fill-base-content cursor-pointer" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Content -->
+            <PageTransition pathname={data.pathname}>
+                <slot />
+
+                <!-- Footer -->
+                <div class="flex flex-row justify-between pt-8">
+                    <div class="text-sm italic">last updated April 13, 2023</div>
+                    <div class="text-sm italic">
+                        created using <a href="https://kit.svelte.dev/" target="_blank" class="text-accent">SvelteKit</a>,
+                        <a href="https://threejs.org/" target="_blank" class="text-accent">three.js</a>,
+                        <a href="https://vercel.com/" target="_blank" class="text-accent">vercel</a>
+                    </div>
+                </div>
+            </PageTransition>
+
+            
+        </div>
+    </div>
+
+    <!-- Background graphics -->
+    <div class="w-full h-full fixed top-0 left-0 bottom-0 -z-10 bg-black">
+        <Canvas>
+            <World gravity={{ x: 0, y: 0, z: 0 }}>
+                <Attractor position={attractorPosition} strength={backgroundEnabled ? 5 : 0} range={1000} />
+                <T.PerspectiveCamera bind:ref={sceneCamera} makeDefault position={[0, 0, 50]} fov={24}>
+                </T.PerspectiveCamera>
+                <T.DirectionalLight castShadow position={[15, 15, 15]} />
+                <!-- <T.DirectionalLight position={[-3, 10, -10]} intensity={0.2} /> -->
+                <T.AmbientLight intensity={0.5} />
+
+                <Collider shape="ball" args={[7]} position={attractorPosition} />
+
+                <!-- Cube --> 
+                <T.Group>
+                    {#each Array(32) as _, i}
+                    <RigidBody position={{ x: Math.sin(Math.PI * i / 6) * 12, y: Math.cos(Math.PI * i / 6) * 12, z: i * -2 }} scale={3} 
+                        linearDamping={3} lockRotations={!backgroundEnabled} lockTranslations={!backgroundEnabled}>
+                        <AutoColliders shape="ball" density="1" mass="1" friction="1">
+                            <T.Mesh castShadow>
+                                <T.SphereGeometry />
+                                <T.MeshStandardMaterial color={randomColor()} />
+                            </T.Mesh>
+                        </AutoColliders>
+                    </RigidBody>
+                    {/each}
+                </T.Group>
+
+                <Fog color={'#000'} near={25} far={50} />
+            </World>
+        </Canvas>
+    </div>
+
+    <!-- Botton right corner background toggle -->
+    <!-- <div class="fixed bottom-0 right-0">
+        <div class="p-8">
+            <button class="btn btn-outline {backgroundEnabled ? 'btn-warning' : 'btn-error'}" on:click={() => backgroundEnabled = !backgroundEnabled}>
+                Background {backgroundEnabled ? 'On' : 'Off'}
+            </button>
+        </div>
+    </div> -->
+</main>
