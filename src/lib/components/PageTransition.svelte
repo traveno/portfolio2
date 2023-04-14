@@ -1,12 +1,13 @@
 <script lang="ts">
-    import { fly } from "svelte/transition";
+    import { fly, scale, fade } from "svelte/transition";
     export let pathname = '';
     const pageTransitionDuration = 500;
   </script>
   
   {#key pathname}
-    <div  in:fly={{ x: -5, duration: pageTransitionDuration, delay: pageTransitionDuration }}
-         out:fly={{ x: 5, duration: pageTransitionDuration }}
+    <div  in:fade={{ duration: pageTransitionDuration, delay: pageTransitionDuration }}
+         out:fade={{ duration: pageTransitionDuration }}
+      class="w-full h-full"
     >
       <slot />
     </div>

@@ -1,9 +1,12 @@
 <script lang="ts">
-    import { T, Object3DInstance, useFrame } from '@threlte/core';
+    import { T, Object3DInstance, useFrame, InteractiveObject } from '@threlte/core';
     import * as THREE from "three";
     import { createNoise3D } from 'simplex-noise';
     import { onMount } from 'svelte';
     import { degToRad } from 'three/src/math/MathUtils';
+    import { spring } from 'svelte/motion';
+    import { Float, Text } from '@threlte/extras';
+    import { heroBackgroundColor } from '$lib/stores/data';
 
     let sphere = new THREE.Group();
     sphere.position.set(0, -3.5, 0);
@@ -11,8 +14,10 @@
     let originals: THREE.Vector3[] = [];
 
     let material = new THREE.LineBasicMaterial({
-        color: '#b00000'
+        color: $heroBackgroundColor as THREE.ColorRepresentation
     });
+
+    heroBackgroundColor.subscribe(newColor => {material.color = new THREE.Color(newColor as THREE.ColorRepresentation)});
 
     const noise3D = createNoise3D(Math.random);
 
@@ -94,26 +99,57 @@
 
     let frameCount = 0;
 
+    const textSpacing = spring(1);
+
     useFrame((ctx, delta) => {
-        // updateVertices(delta);
         testVertices(frameCount++);
     });
 
     onMount(() => {
         createOrb();
     });
+
+    function newText() {
+        taglineIndex += 1;
+        if (taglineIndex >= taglines.length) taglineIndex = 0;
+    }
+
+    let taglines = [
+        'STEPHEN FIKE',
+        'WELCOME',
+        'TO MY PORTFOLIO'
+    ];
+
+    let taglineIndex = 0;
 </script>
 
 <!-- <svelte:body on:mousemove={event => mouseMoved(event)} /> -->
 
-<T.Mesh rotation.x={degToRad(90)} position={[0, 0, -0]}>
+<T.Mesh rotation.x={degToRad(90)} position={[0, 0, -0]} receiveShadow>
     <T.MeshPhongMaterial color={'#222'} side={THREE.DoubleSide} />
     <T.PlaneGeometry args={[50, 50]} />
 </T.Mesh>
 
-<T.PointLight args={['#f44', 15, 50, 20]} position={[0, 5, 5]} castShadows />
-
-
 <T.PerspectiveCamera makeDefault bind:ref={sceneCamera} position.z={25} position.y={1.5} fov={35}>
 </T.PerspectiveCamera>
-<Object3DInstance bind:object={sphere} rotation={{ x: degToRad(25) }} position={{ x: 0, y: 1, z: -5 }} scale={0.5} />
+
+<Float floatIntensity={2} floatingRange={[0.5, 0.2]}>
+    <Object3DInstance object={sphere} rotation={{ x: degToRad(25) }} position={{ x: 0, y: 2.5, z: -5 }} scale={0.5} />
+    <T.PointLight args={[undefined, 15, 50, 20]} position={[0, 5, 5]} color={$heroBackgroundColor} shadow.radius={25} castShadow />
+    <Text
+        interactive 
+        on:pointerenter={() => $textSpacing = 0.5}
+        on:pointerleave={() => $textSpacing = 1}
+        on:click={() => newText()}
+        text={taglines[taglineIndex]}
+        position={{ x: 0, y: 1.7, z: 5 }}
+        rotation={{ x: degToRad(-25) }}
+        fillOpacity={$textSpacing}
+        fontSize={1.25}
+        letterSpacing={0.15}
+        font={'/fonts/Rubik/static/Rubik-Regular.ttf'}
+        anchorX={'center'}
+        material={new THREE.MeshStandardMaterial({ color: '#f2f2f2' })}
+    />
+</Float>
+
