@@ -1,4 +1,6 @@
 import { writable } from "svelte/store";
+import * as THREE from "three";
 
 export const loadingComplete = writable<boolean>(false);
-export const keyboardLoad = writable<number>(0);
+
+export const enablePhysics = writable<boolean>(true);

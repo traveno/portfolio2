@@ -13,37 +13,20 @@
     const dispatch = createEventDispatcher();
 
     const { scene } = useThrelte();
-    const loaded = () => dispatch('loaded');
 
     let keyboard: Keyboard;
 
-    function keyboardLoaded() {
-        loaded();
-    }
 
-    /**
-    * @param {number} zoomLevel
-    */
     export function setCameraZoom(zoomLevel: number) {
         $cameraZoom = zoomLevel;
     }
 
-    /**
-    * @param {number} x
-    * @param {number} y
-    * @param {number} z
-    */
     export function setCameraPosition(x: number, y: number, z: number) {
         $cameraX = x;
         $cameraY = y;
         $cameraZ = z;
     }
 
-    /**
-    * @param {number} x
-    * @param {number} y
-    * @param {number} z
-    */
     export function setCameraLookAt(x: number, y: number, z: number) {
         $lookAtX = x;
         $lookAtY = y;
@@ -76,5 +59,5 @@
 
 <Keyboard 
     bind:this={keyboard}
-    on:load={keyboardLoaded}
+    on:load={() => dispatch('load')}
 />

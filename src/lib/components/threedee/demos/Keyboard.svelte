@@ -1,22 +1,16 @@
 <script lang="ts">
-    import { useGltfAnimations, GLTF, Text } from "@threlte/extras";
+    import { useGltfAnimations, GLTF, Text } from '@threlte/extras';
     import * as THREE from 'three';
-    import { createEventDispatcher } from "svelte";
+    import { createEventDispatcher } from 'svelte';
     
     const dispatch = createEventDispatcher();
 
-    const loaded = () => dispatch('load');
-
     export async function beginTyping(text: string) {
         return new Promise<void>((resolve) => {
-            if ($actions)
-                console.log($actions);
-
             let index = 0;
             let ignoreModifier = false;
 
             const advance = () => {
-                console.log('advance')
                 if (index === text.length)
                     resolve();
                 
@@ -114,20 +108,13 @@
     }
 
     let typeTextCut = '';
-
-    function gltfLoaded() {
-        // Emit loaded event, since all we need to load is the gltf
-        loaded();
-    }
-
-    let position = new THREE.Vector3(0, 0, 0);
 </script>
     
 <GLTF 
     url={'/keyboard.glb'}
     bind:gltf={$gltf} 
     position={new THREE.Vector3(0, 1, 0)} 
-    on:load={gltfLoaded}
+    on:load={() => dispatch('load')}
 />
 
 <Text 

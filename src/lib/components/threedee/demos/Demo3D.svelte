@@ -3,7 +3,8 @@
     import Scene from './Scene.svelte';
     import OverlayScene from './OverlayScene.svelte';
     import { delay } from '$lib/helpers';
-    import { createEventDispatcher } from 'svelte';
+    import { fade, scale } from 'svelte/transition';
+    import { loadingComplete } from '$lib/stores/data';
 
     let windowWidth: number;
     let windowHeight : number;
@@ -12,8 +13,7 @@
     let overlayScene: OverlayScene;
 
     let splashVisible = true;
-
-    const dispatch = createEventDispatcher();
+    let loading = true;
 
     let zoomScale: number | undefined;
 
@@ -75,12 +75,16 @@
         await delay(6000);
         primaryScene.setDemoStage(8);
     }
+
+    function onLoadComplete() {
+        loading = false;
+        loadingComplete.set(true);
+    }
 </script>
 
 <svelte:window bind:innerWidth={windowWidth} bind:innerHeight={windowHeight} />
 
 <div class="relative lg:rounded-lg aspect-video overflow-hidden border-warning">
-    <!-- <p>{zoomScale} {(windowWidth / windowHeight)}</p> -->
     {#if zoomScale !== undefined}
     <div class="absolute w-full h-full">
         <Canvas>
@@ -89,9 +93,17 @@
     </div>
     <div class="absolute w-full h-full">
         <Canvas>
-            <OverlayScene bind:this={overlayScene} on:loaded={() => dispatch('loaded')} cameraZoomScale={zoomScale} />
+            <OverlayScene bind:this={overlayScene} on:load={() => onLoadComplete()} cameraZoomScale={zoomScale} />
         </Canvas>
     </div>
+    {/if}
+    {#if loading}
+    <div class="absolute w-full h-full z-20 bg-base-100" out:fade={{ duration: 500, delay: 500 }}>
+        <div class="flex flex-col justify-center items-center h-full space-y-12">
+            <img src="/sf.png" id="initials" alt="my initials" class="w-24" out:scale={{ start: 2, duration: 500 }} />
+            <!-- <progress class="progress progress-info w-56" value={$loadingComplete ? 100 : 0} max="100"></progress> -->
+        </div>
+    </div> 
     {/if}
     {#if splashVisible}
     <div class="absolute w-full h-full z-10 bg-base-100/25 backdrop-blur flex flex-col justify-center items-center">
@@ -99,3 +111,21 @@
     </div>
     {/if}
 </div>
+
+<style>
+    #initials {
+        animation-name: spin;
+        animation-duration: 5000ms;
+        animation-iteration-count: infinite;
+        animation-timing-function: linear; 
+    }
+
+    @keyframes spin {
+    from {
+        transform:rotate(0deg);
+    }
+    to {
+        transform:rotate(360deg);
+    }
+}
+</style>

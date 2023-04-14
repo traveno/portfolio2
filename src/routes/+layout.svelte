@@ -1,69 +1,39 @@
 <script lang="ts">
     import '../app.css';
-    import { Canvas, T, type Position, FogExp2 } from '@threlte/core';
-    import * as THREE from "three";
-    import { World, RigidBody, AutoColliders, Collider, Attractor } from '@threlte/rapier';
-    
     import PageTransition from '$lib/components/PageTransition.svelte';
     import type { LayoutServerData } from './$types';
     import { page } from '$app/stores';
-    import { loadingComplete } from '$lib/stores/data';
-    import { fade, scale } from 'svelte/transition';
-    import { randomHexColor } from '$lib/helpers';
     import { browser, dev } from '$app/environment';
     
     // Vercel analytics
     import { webVitals } from '$lib/vitals';
     import { inject } from '@vercel/analytics';
+    import { enablePhysics } from '$lib/stores/data';
+    import OrbScene from '$lib/components/threedee/OrbScene.svelte';
+    import { Canvas } from '@threlte/core';
     inject({ mode: dev ? 'development' : 'production' });
 
     export let data: LayoutServerData;
 
-    let sceneCamera: THREE.PerspectiveCamera;
-    let attractorPosition: Position = new THREE.Vector3(0, 0, 0);
-    
-    let backgroundEnabled = true;
-
     let analyticsId = import.meta.env.VERCEL_ANALYTICS_ID;
     $: if (browser && analyticsId) webVitals({ path: $page.url.pathname, params: $page.params, analyticsId });
-
-    function mouseMoved(event: MouseEvent) {
-        if (!backgroundEnabled || !sceneCamera) return;
-
-        let mousePosition3D = new THREE.Vector3(
-             (event.clientX / window.innerWidth)  * 2 - 1,
-            -(event.clientY / window.innerHeight) * 2 + 1,
-            0.5
-        );
-
-        mousePosition3D.unproject(sceneCamera);
-        let direction = mousePosition3D.sub(sceneCamera.position).normalize();
-        let distance = -sceneCamera.position.z / direction.z;
-        let position = sceneCamera.position.clone().add(direction.multiplyScalar(distance));
-
-        attractorPosition = position as Position;
-    }
-
-    function mouseLeave() {
-        if (!backgroundEnabled) return;
-        attractorPosition = new THREE.Vector3(0, 0, 0) as Position;
-    }
 </script>
 
-<main on:mousemove={event => mouseMoved(event)} on:mouseleave={mouseLeave} class="h-full">
+<main class="h-full">
     <!-- Main content container -->
-    <div class="mx-auto lg:max-w-screen-lg overflow-hidden z-10">
-        <div class="flex flex-col justify-start lg:space-y-8 lg:py-16">
+    <div class="mx-auto lg:max-w-screen-lg z-10">
+        <div class="flex flex-col justify-start lg:gap-8 lg:py-16">
             <!-- Navbar -->
             <div class="navbar justify-center items-center lg:bg-base-100/50 lg:rounded-lg lg:backdrop-blur bg-transparent backdrop-blur-0">
                 <div class="navbar-start">
-                    <button class="hidden md:block btn btn-ghost {backgroundEnabled ? 'text-success' : 'text-warning'}" on:click={() => backgroundEnabled = !backgroundEnabled}>
-                        Physics {backgroundEnabled ? 'On' : 'Off'}
+                    <button class="hidden md:block btn btn-ghost {$enablePhysics ? 'text-success' : 'text-warning'}" on:click={() => enablePhysics.update(old => !old)}>
+                        Physics {$enablePhysics ? 'On' : 'Off'}
                     </button>
                 </div>
                 <div class="navbar-center">
                     <ul class="menu menu-horizontal px-1">
-                        <li><a href="/" class:text-accent={$page.url.pathname === '/'}>about</a></li>
+                        <li><a href="/" class:text-accent={$page.url.pathname === '/'}>home</a></li>
+                        <li><a href="/about" class:text-accent={$page.url.pathname === '/about'}>about</a></li>
                         <li><a href="/projects" class:text-accent={$page.url.pathname === '/projects'}>projects</a></li>
                         <li><a href="/contact" class:text-accent={$page.url.pathname === '/contact'}>contact</a></li>
                     </ul>
@@ -77,6 +47,7 @@
             <!-- Content -->
             <PageTransition pathname={data.pathname}>
                 <slot />
+
                 <!-- Footer -->
                 <div class="flex flex-row justify-between p-8 lg:pß-0">
                     <div class="text-sm italic">last updated April 13, 2023</div>
@@ -90,72 +61,22 @@
         </div>
     </div>
 
-    <!-- Loading splash -->
-    {#if !$loadingComplete}
-    <div class="w-full h-full fixed top-0 left-0 right-0 bottom-0 bg-black z-20" out:fade={{ duration: 500, delay: 250 }}>
-        <div class="flex flex-col justify-between items-center h-full relative">
-            <div class="grow flex-1"></div>
-            <div class="flex-1 w-40 flex flex-col justify-center"><img src="/sf.png" id="initials" alt="my initials" out:scale={{ start: 2, duration: 500 }} /></div>
-            <div class="flex-1 text-2xl font-mono p-0 flex flex-col justify-end lg:justify-start pb-24"><span>loading assets...</span></div>
-        </div>
-    </div> 
-    {/if}
-    
-
     <!-- Mobile blur -->
     <div class="w-full h-full fixed top-0 left-0 right-0 bottom-0 -z-10 bg-base-100/50 lg:bg-transparent backdrop-blur lg:backdrop-blur-0"></div>
 
     <!-- Background graphics -->
-    <div class="w-full h-full fixed top-0 left-0 right-0 bottom-0 -z-20 bg-black">
+    <!-- <BackgroundBalls /> -->
+    
+    <!-- <Background /> -->
+
+    <!-- Background graphics -->
+    <div class="w-full h-full fixed top-0 left-0 right-0 bottom-0 -z-10 bg-black">
         <Canvas>
-            <World gravity={{ x: 0, y: 0, z: 0 }}>
-                <Attractor position={attractorPosition} strength={backgroundEnabled ? 5 : 0} range={1000} />
-                <T.PerspectiveCamera bind:ref={sceneCamera} makeDefault position={[0, 0, 50]} fov={24}>
-                </T.PerspectiveCamera>
-                <T.DirectionalLight position={[15, 15, 15]} />
-                <!-- <T.DirectionalLight position={[-3, 10, -10]} intensity={0.2} color={'0xf00'} /> -->
-                <!-- <T.PointLight position={[15, 15, 0]} color={'#f00'} intensity={5} /> -->
-                <T.AmbientLight intensity={0.5} />
-
-                <Collider shape="ball" args={[7]} position={attractorPosition} />
-
-                <!-- Cube --> 
-                <T.Group>
-                    {#each Array(32) as _, i}
-                    <RigidBody position={{ x: Math.sin(Math.PI * i / 6) * 12, y: Math.cos(Math.PI * i / 6) * 12, z: i * -2 }} scale={3} 
-                        linearDamping={3} lockRotations={!backgroundEnabled} lockTranslations={!backgroundEnabled}>
-                        <AutoColliders shape="ball" density="1" mass="1" friction="1">
-                            <T.Mesh>
-                                <T.SphereGeometry />
-                                <T.MeshStandardMaterial color={randomHexColor()} />
-                            </T.Mesh>
-                        </AutoColliders>
-                    </RigidBody>
-                    {/each}
-                </T.Group>
-
-                
-            </World>
-            <FogExp2 color={'#000'} density={0.02} />
-            <!-- <FogExp2 color={'#f00'} density={0.01} /> -->
+            <!-- <T.DirectionalLight position={[15, 15, 15]} />
+            <T.AmbientLight intensity={1} /> -->
+            <OrbScene />
         </Canvas>
     </div>
+
 </main>
 
-<style>
-    #initials {
-        animation-name: spin;
-        animation-duration: 5000ms;
-        animation-iteration-count: infinite;
-        animation-timing-function: linear; 
-    }
-
-    @keyframes spin {
-    from {
-        transform:rotate(0deg);
-    }
-    to {
-        transform:rotate(360deg);
-    }
-}
-</style>
