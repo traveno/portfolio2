@@ -4,8 +4,8 @@
 </script>
 
 <AnimatedElement>
-    <div class="flex flex-col justify-start items-center gap-4 py-16">
-        <span class="text-6xl md:text-8xl uppercase">Expertise</span>
+    <div class="flex flex-col justify-start items-center gap-4 my-16 h-screen">
+        <span class="text-5xl md:text-8xl uppercase">Expertise</span>
         <div class="divider mt-0"></div>
         <div class="grid md:grid-cols-2 gap-8 max-w-screen-lg">
             <!-- Web app dev -->

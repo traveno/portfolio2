@@ -7,6 +7,7 @@
     import { spring } from 'svelte/motion';
     import { Float, Text } from '@threlte/extras';
     import { heroBackgroundColor } from '$lib/stores/data';
+    import Device from 'svelte-device-info';
 
     let sphere = new THREE.Group();
     sphere.position.set(0, -3.5, 0);
@@ -16,6 +17,8 @@
     let material = new THREE.LineBasicMaterial({
         color: $heroBackgroundColor as THREE.ColorRepresentation
     });
+
+    $: console.log(Device.isMobile);
 
     heroBackgroundColor.subscribe(newColor => {material.color = new THREE.Color(newColor as THREE.ColorRepresentation)});
 
@@ -134,7 +137,7 @@
 </T.PerspectiveCamera>
 
 <Float floatIntensity={2} floatingRange={[0.5, 0.2]}>
-    <Object3DInstance object={sphere} rotation={{ x: degToRad(25) }} position={{ x: 0, y: 2.5, z: -5 }} scale={0.5} />
+    <Object3DInstance object={sphere} rotation={{ x: degToRad(25) }} position={{ x: 0, y: Device.isMobile ? 1.5 : 2.5, z: -5 }} scale={0.5} />
     <T.PointLight args={[undefined, 15, 50, 20]} position={[0, 5, 5]} color={$heroBackgroundColor} shadow.radius={25} castShadow />
     <Text
         interactive 
@@ -145,8 +148,8 @@
         position={{ x: 0, y: 1.7, z: 5 }}
         rotation={{ x: degToRad(-25) }}
         fillOpacity={$textSpacing}
-        fontSize={1.25}
-        letterSpacing={0.15}
+        fontSize={Device.isMobile ? 0.65 : 1.25}
+        letterSpacing={Device.isMobile ? 0 : 0.15}
         font={'/fonts/Rubik/static/Rubik-Regular.ttf'}
         anchorX={'center'}
         material={new THREE.MeshStandardMaterial({ color: '#f2f2f2' })}
