@@ -5,7 +5,7 @@
 
 <AnimatedElement>
     <div class="flex flex-col justify-start items-center gap-4 py-28">
-        <span class="text-5xl md:text-8xl uppercase">Expertise</span>
+        <span class="text-5xl md:text-7xl">My Expertise</span>
         <div class="divider mt-0"></div>
         <div class="grid md:grid-cols-2 gap-2 md:gap-8 max-w-screen-lg">
             <!-- Web app dev -->

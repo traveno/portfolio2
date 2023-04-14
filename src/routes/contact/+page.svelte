@@ -19,10 +19,10 @@
 </script>
 
 <svelte:head>
-    <title>Stephen Fike -- Software Engineer</title>
+    <title>Stephen -- Software Engineer</title>
 </svelte:head>
 
-<div class="flex flex-col bg-base-100">
+<div class="flex flex-col">
     <!-- Hero -->
     <div class="flex flex-row justify-center items-start md:items-center h-screen">
         <div class="stack shadow-2xl shadow-base-100 mt-40 md:mt-0">
@@ -48,9 +48,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            <!-- Card -->
-            <div class="p-8 rounded-lg border-2 border-base-content from-transparent/50 to-transparent/20 bg-gradient-to-bl max-w-screen-2xl h-72" style:background-color={$heroBackgroundColor}>
             </div>
             <!-- Card -->
             <div class="p-8 rounded-lg border-2 border-base-content from-transparent/50 to-transparent/20 bg-gradient-to-bl max-w-screen-2xl h-72" style:background-color={$heroBackgroundColor}>

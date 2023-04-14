@@ -1,6 +1,7 @@
 <script lang="ts">
     import StageScene from "$lib/components/threedee/StageScene.svelte";
     import Demo3D from "$lib/components/threedee/demos/Demo3D.svelte";
+    import Demo3DInteractive from "$lib/components/threedee/demos/Demo3DInteractive.svelte";
     import { Canvas } from "@threlte/core";
 </script>
 
@@ -8,7 +9,7 @@
     <title>Stephen Fike -- Software Engineer</title>
 </svelte:head>
 
-<div class="absolute w-full h-full z-0">
+<div class="fixed w-full h-full bg-black">
     <Canvas>
         <!-- <T.DirectionalLight position={[15, 15, 15]} />
         <T.AmbientLight intensity={1} /> -->
@@ -16,10 +17,14 @@
     </Canvas>
 </div>
 
-<div class="mx-auto flex flex-col justify-start items-center w-screen h-screen max-w-screen-lg py-40 pd:my-28 gap-4">
-    <div class="text-6xl uppercase text-base-content">three.js demo</div>
-    <div class="divider mt-0"></div>
+<div class="mx-auto flex flex-col justify-start items-center max-w-screen-lg gap-4 py-40">
+    <span class="text-5xl md:text-7xl text-base-content z-10"><span class="font-mono p-1 bg-base-100 rounded">three.js</span> Demo</span>
+    <div class="divider"></div>
     <div class="w-full">
         <Demo3D />
+    </div>
+    <div class="divider"></div>
+    <div class="w-full">
+        <Demo3DInteractive />
     </div>
 </div>

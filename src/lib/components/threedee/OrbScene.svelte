@@ -1,32 +1,33 @@
 <script lang="ts">
-    import { T, Object3DInstance, useFrame, InteractiveObject } from '@threlte/core';
+    import { T, Object3DInstance, useFrame, InteractiveObject, type Position } from '@threlte/core';
     import * as THREE from "three";
     import { createNoise3D } from 'simplex-noise';
     import { onMount } from 'svelte';
     import { degToRad } from 'three/src/math/MathUtils';
     import { spring } from 'svelte/motion';
     import { Float, Text } from '@threlte/extras';
-    import { heroBackgroundColor } from '$lib/stores/data';
+    import { enablePhysics, heroBackgroundColor, unleashBalls } from '$lib/stores/data';
     import Device from 'svelte-device-info';
+    import { Attractor, AutoColliders, Collider, RigidBody, World } from '@threlte/rapier';
+    import { randomHexColor } from '$lib/helpers';
 
+    // For the orb part of the scene
+    let frameCount = 0;
+    const textSpacing = spring(1);
     let sphere = new THREE.Group();
     sphere.position.set(0, -3.5, 0);
-
     let originals: THREE.Vector3[] = [];
-
     let material = new THREE.LineBasicMaterial({
         color: $heroBackgroundColor as THREE.ColorRepresentation
     });
-
     $: console.log(Device.isMobile);
-
-    heroBackgroundColor.subscribe(newColor => {material.color = new THREE.Color(newColor as THREE.ColorRepresentation)});
-
     const noise3D = createNoise3D(Math.random);
 
     let linesAmount = 12;
     let radius = 10;
     let verticesAmount = 50;
+
+    heroBackgroundColor.subscribe(newColor => {material.color = new THREE.Color(newColor as THREE.ColorRepresentation)});
 
     function createOrb() {
         for (let i = 0; i < linesAmount; i++) {
@@ -91,18 +92,15 @@
         let mousePosition3D = new THREE.Vector3(
              (event.clientX / window.innerWidth)  * 2 - 1,
             -(event.clientY / window.innerHeight) * 2 + 1,
-            0.5
+            0.25
         );
 
         mousePosition3D.unproject(sceneCamera);
         let direction = mousePosition3D.sub(sceneCamera.position).normalize();
         let distance = -sceneCamera.position.z / direction.z;
-        let position = sceneCamera.position.clone().add(direction.multiplyScalar(distance)).normalize();
+        let position = sceneCamera.position.clone().add(direction.multiplyScalar(distance));
+        attractorPosition = position as Position;
     }
-
-    let frameCount = 0;
-
-    const textSpacing = spring(1);
 
     useFrame((ctx, delta) => {
         testVertices(frameCount++);
@@ -120,13 +118,26 @@
     let taglines = [
         'STEPHEN FIKE',
         'WELCOME',
-        'TO MY PORTFOLIO'
+        'TO MY',
+        'COMPUTER SCIENCE',
+        'PORTFOLIO'
     ];
 
     let taglineIndex = 0;
+
+    // For the ball part of the scene
+    let attractorPosition: Position = new THREE.Vector3(0, 0, 0);
+    
+    let backgroundEnabled = true;
+    $: backgroundEnabled = $enablePhysics;
+
+    function mouseLeave() {
+        if (!backgroundEnabled) return;
+        attractorPosition = new THREE.Vector3(0, 0, 0) as Position;
+    }
 </script>
 
-<!-- <svelte:body on:mousemove={event => mouseMoved(event)} /> -->
+<svelte:body on:mousemove={event => mouseMoved(event)} on:mouseleave={() => mouseLeave()} />
 
 <T.Mesh rotation.x={degToRad(90)} position={[0, 0, -0]} receiveShadow>
     <T.MeshPhongMaterial color={'#222'} side={THREE.DoubleSide} />
@@ -136,12 +147,13 @@
 <T.PerspectiveCamera makeDefault bind:ref={sceneCamera} position.z={25} position.y={1.5} fov={35}>
 </T.PerspectiveCamera>
 
-<Float floatIntensity={2} floatingRange={[0.5, 0.2]}>
+<Float floatIntensity={2} floatingRange={[0.25, 0.5]}>
     <Object3DInstance object={sphere} rotation={{ x: degToRad(25) }} position={{ x: 0, y: Device.isMobile ? 1.5 : 2.5, z: -5 }} scale={0.5} />
-    <T.PointLight args={[undefined, 15, 50, 20]} position={[0, 5, 5]} color={$heroBackgroundColor} shadow.radius={25} castShadow />
+    <T.PointLight args={[undefined, 25, 50, 20]} position={[0, 5, 5]} color={$heroBackgroundColor} shadow.radius={10} castShadow />
     <Text
-        interactive 
-        on:pointerenter={() => $textSpacing = 0.5}
+        interactive
+        castShadow
+        on:pointerenter={() => $textSpacing = 0.6}
         on:pointerleave={() => $textSpacing = 1}
         on:click={() => newText()}
         text={taglines[taglineIndex]}
@@ -156,3 +168,25 @@
     />
 </Float>
 
+
+{#if $unleashBalls}
+<World gravity={{ x: 0, y: 0, z: 0 }}>
+    <Attractor position={attractorPosition} strength={backgroundEnabled ? 10 : 0} range={1000} />
+    <Collider shape="ball" args={[4]} position={attractorPosition} />
+
+    <!-- Cube --> 
+    <T.Group>
+        {#each Array(32) as _, i}
+        <RigidBody position={{ x: Math.sin(Math.PI * i / 6) * 12, y: Math.cos(Math.PI * i / 6) * 12, z: (i * -2) - 50 }} scale={1} 
+            linearDamping={3} lockRotations={!backgroundEnabled} lockTranslations={!backgroundEnabled}>
+            <AutoColliders shape="ball" density="1" mass="1" friction="0">
+                <T.Mesh>
+                    <T.SphereGeometry />
+                    <T.MeshStandardMaterial color={randomHexColor()} />
+                </T.Mesh>
+            </AutoColliders>
+        </RigidBody>
+        {/each}
+    </T.Group>
+</World>
+{/if}

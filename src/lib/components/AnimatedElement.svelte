@@ -19,7 +19,7 @@
     on:inview_leave={event => inViewEvent(event)}
 >
     {#if isInView}
-    <div in:fly={{ y: 25, duration: 500, easing: cubicIn }}>
+    <div in:fly={{ y: -25, duration: 500, easing: cubicIn }}>
         <slot />
     </div>
     {/if}
