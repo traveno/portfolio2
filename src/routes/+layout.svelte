@@ -102,8 +102,7 @@
 </main>
 
 <!-- Footer -->
-<footer class="flex flex-row justify-between fixed bottom-0 w-full px-8 py-4">
-
+<footer class="flex flex-row justify-between fixed bottom-0 w-full px-8 py-4 bg-black/25 backdrop-blur md:bg-transparent md:backdrop-blur-0">
     <div class="text-sm italic text-base-content/50">last updated April 13, 2023</div>
     <div class="text-sm italic text-base-content/50">
         created using <a href="https://kit.svelte.dev/" target="_blank" class="text-accent/80">SvelteKit</a>,
