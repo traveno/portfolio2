@@ -9,22 +9,19 @@
     <title>Stephen Fike -- Software Engineer</title>
 </svelte:head>
 
-<div class="fixed w-full h-full bg-black">
+<div class="fixed w-full h-screen -z-20 bg-black">
     <Canvas>
-        <!-- <T.DirectionalLight position={[15, 15, 15]} />
-        <T.AmbientLight intensity={1} /> -->
         <StageScene />
     </Canvas>
 </div>
 
-<div class="mx-auto flex flex-col justify-start items-center max-w-screen-lg gap-4 py-40">
-    <span class="text-5xl md:text-7xl text-base-content z-10"><span class="font-mono p-1 bg-base-100 rounded">three.js</span> Demo</span>
-    <div class="divider"></div>
-    <div class="w-full">
+<div class="mx-auto flex flex-col justify-start max-w-screen-lg gap-24 my-24">
+    <div>
+        <span class="text-5xl md:text-7xl text-base-content"><span class="font-mono p-1 bg-base-100 rounded">three.js</span> Demo</span>
         <Demo3D />
     </div>
-    <div class="divider"></div>
-    <div class="w-full">
+    <div>
+        <span class="text-5xl md:text-7xl text-base-content"><span class="font-mono p-1 bg-base-100 rounded">three.js</span> Demo</span>
         <Demo3DInteractive />
     </div>
 </div>

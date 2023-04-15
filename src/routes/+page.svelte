@@ -1,8 +1,10 @@
 <script lang="ts">
     import Expertise from "$lib/components/main-page/Expertise.svelte";
+    import OtherExpertise from "$lib/components/main-page/OtherExpertise.svelte";
     import OrbScene from "$lib/components/threedee/OrbScene.svelte";
     import { heroBackgroundColor } from "$lib/stores/data";
     import { Canvas } from "@threlte/core";
+    import { onMount } from "svelte";
 
     function smoothScrollToId(event: MouseEvent) {
         event.preventDefault();
@@ -11,28 +13,52 @@
         const anchor = document.getElementById(anchorId);
         window.scrollTo({ top: anchor?.offsetTop, behavior: 'smooth' });
     }
+
+    let showDownArrow = true;
+
+
+    function onDownArrowClicked(event: MouseEvent) {
+        event.preventDefault();
+        smoothScrollToId(event);
+
+        // Remember this in local storage
+        localStorage.setItem('dismissed-arrow', 'true');
+    }
+
+    onMount(() => {
+        let arrowMemory = localStorage.getItem('dismissed-arrow');
+        if (arrowMemory && arrowMemory === 'true') showDownArrow = false; 
+    });
 </script>
 
 <svelte:head>
     <title>Stephen -- Software Engineer</title>
 </svelte:head>
 
+<div class="absolute w-full h-screen bg-black">
+    <Canvas>
+        <OrbScene />
+    </Canvas></div>
+
 <div class="flex flex-col">
-    <!-- Hero -->
-    <div class="flex flex-row justify-center items-center h-screen bg-black relative">
-        <Canvas>
-            <OrbScene />
-        </Canvas>
-        <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <div class="absolute block h-1/5 w-full bottom-0 left-0 right-0">
-            <a href="#2" on:click={event => smoothScrollToId(event)}>
-                <svg style="fill: {$heroBackgroundColor}; fill-opacity: 0.5;" class="fill-base-content/50 mx-auto cursor-pointer animate-[bounce_2s_ease-in-out_infinite] animation-delay-500" xmlns="http://www.w3.org/2000/svg" height="96" viewBox="0 96 960 960" width="96"><path d="M480 711 240 471l43-43 197 198 197-197 43 43-240 239Z"/></svg>
+        <div class="flex flex-col h-screen justify-start items-center">
+        {#if showDownArrow}
+        <div class="basis-2/3"></div>
+        <div class="basis-1/3">
+            <a href="#2" on:click={event => onDownArrowClicked(event)}>
+                <span class="icon-[solar--alt-arrow-down-bold] w-24 h-24 cursor-pointer animate-[bounce_2s_ease-in-out_infinite] animation-delay-500 opacity-50" style:color={$heroBackgroundColor}></span>
             </a>
         </div>
+        {/if}
     </div>
 
     <!-- Expertise -->
     <div id="2" class="flex flex-row justify-center items-center h-screen from-black to-base-300 bg-gradient-to-b">
         <Expertise />
+    </div>
+
+    <!-- Expertise -->
+    <div id="2" class="flex flex-row justify-center items-center h-screen from-base-300 to-transparent/75 bg-gradient-to-b" style:background-color={$heroBackgroundColor}>
+        <OtherExpertise />
     </div>
 </div>

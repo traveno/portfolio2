@@ -11,6 +11,9 @@
 	},
 	"devDependencies": {
 		"@dimforge/rapier3d-compat": "^0.11.2",
+		"@iconify/json": "^2.2.50",
+		"@iconify/svelte": "^3.1.1",
+		"@iconify/tailwind": "^0.1.2",
 		"@sveltejs/adapter-auto": "^2.0.0",
 		"@sveltejs/adapter-vercel": "^2.4.1",
 		"@sveltejs/kit": "^1.5.0",
@@ -36,6 +39,7 @@
 		"svelte-device-info": "^1.0.0",
 		"svelte-floating-ui": "^1.5.2",
 		"svelte-inview": "^4.0.0",
+		"svelte-outclick": "^3.5.0",
 		"svelte-sequential-preprocessor": "^1.0.0",
 		"tailwindcss": "^3.3.1",
 		"three": "^0.150.1",

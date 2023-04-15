@@ -5,7 +5,7 @@
 
 <AnimatedElement>
     <div class="flex flex-col justify-start items-center gap-4 py-28">
-        <span class="text-5xl md:text-7xl">My Expertise</span>
+        <span class="text-5xl md:text-7xl">My Skillset</span>
         <div class="divider mt-0"></div>
         <div class="grid md:grid-cols-2 gap-2 md:gap-8 max-w-screen-lg">
             <!-- Web app dev -->
@@ -28,7 +28,7 @@
                         <div><img class="w-24 h-24" src="/icons/firebase.svg" alt="firebase" /></div>
                         <div><p class="text-2xl">Backend Deployment</p></div>
                     </div>
-                    <div class="text-base-content/75">
+                    <div class="text-base-content/80">
                         Launched production ready applications on platforms such as AWS, Firebase, Supabase, Vercel.
                         Experienced with self-hosting and maintaining local services.
                     </div>
@@ -43,22 +43,22 @@
                         <div><img class="w-24 h-24" src="/icons/threejs.svg" alt="svelte" /></div>
                         <div><p class="text-2xl">3D Technologies</p></div>
                     </div>
-                    <div class="text-base-content/75">
+                    <div class="text-base-content/80">
                         Familiar with CAD softwares and modeling programs. Expert at implementing new 3D
                         solutions with libraries such as <span class="font-mono">three.js</span>.
                     </div>
                 </div>
             </div>
     
-            <!-- Back end -->
+            <!-- VPS & Linux -->
             <div class="p-8 md:rounded md:hover:scale-105 from-transparent/50 to-transparent/20 bg-gradient-to-bl transition-all" style:background-color={$heroBackgroundColor}>
                 <div class="flex flex-col gap-4">
                     <div class="flex flex-row items-center justify-start gap-4">
-                        <div><img class="w-24 h-24" src="/icons/svelte.svg" alt="svelte" /></div>
-                        <div><p class="text-2xl">Web Application Development</p></div>
+                        <div><img class="w-24 h-24" src="/icons/vultr.svg" alt="svelte" /></div>
+                        <div><p class="text-2xl">Linux, VPSs & Virtual Machines</p></div>
                     </div>
-                    <div class="text-base-content/75">
-                        Experienced with Angular, SvelteKit, React.
+                    <div class="text-base-content/80">
+                        Years of experience experience tinkering with and maintaining Linux machines (at home and in the cloud).
                     </div>
                 </div>
             </div>

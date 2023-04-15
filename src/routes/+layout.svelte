@@ -17,15 +17,13 @@
     $: if (browser && analyticsId) webVitals({ path: $page.url.pathname, params: $page.params, analyticsId });
 </script>
 
-<main class="h-full w-full" id="main-container">
+<main id="main-container">
     <!-- Main content container -->
-    <div class="h-full w-full z-10">
-        <div class="flex flex-col justify-start lg:gap-8 h-full relative">
-            <Navbar />
-            <!-- Content -->
-            <PageTransition pathname={data.pathname}>
-                <slot />
-            </PageTransition>
-        </div>
-    </div>
+    <div class="flex flex-col">
+        <Navbar />
+        <!-- Content -->
+        <PageTransition pathname={data.pathname}>
+            <slot />
+        </PageTransition>
+    </div> 
 </main>
