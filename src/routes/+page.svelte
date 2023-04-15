@@ -2,9 +2,8 @@
     import Expertise from "$lib/components/main-page/Expertise.svelte";
     import OtherExpertise from "$lib/components/main-page/OtherExpertise.svelte";
     import OrbScene from "$lib/components/threedee/OrbScene.svelte";
-    import { heroBackgroundColor } from "$lib/stores/data";
+    import { downArrowClicked, heroBackgroundColor } from "$lib/stores/data";
     import { Canvas } from "@threlte/core";
-    import { onMount } from "svelte";
 
     function smoothScrollToId(event: MouseEvent) {
         event.preventDefault();
@@ -13,22 +12,6 @@
         const anchor = document.getElementById(anchorId);
         window.scrollTo({ top: anchor?.offsetTop, behavior: 'smooth' });
     }
-
-    let showDownArrow = true;
-
-
-    function onDownArrowClicked(event: MouseEvent) {
-        event.preventDefault();
-        smoothScrollToId(event);
-
-        // Remember this in local storage
-        localStorage.setItem('dismissed-arrow', 'true');
-    }
-
-    onMount(() => {
-        let arrowMemory = localStorage.getItem('dismissed-arrow');
-        if (arrowMemory && arrowMemory === 'true') showDownArrow = false; 
-    });
 </script>
 
 <svelte:head>
@@ -42,10 +25,10 @@
 
 <div class="flex flex-col">
         <div class="flex flex-col h-screen justify-start items-center">
-        {#if showDownArrow}
+        {#if !$downArrowClicked}
         <div class="basis-2/3"></div>
         <div class="basis-1/3">
-            <a href="#2" on:click={event => onDownArrowClicked(event)}>
+            <a href="#2" on:click={event => { smoothScrollToId(event); $downArrowClicked = true; }}>
                 <span class="icon-[solar--alt-arrow-down-bold] w-24 h-24 cursor-pointer animate-[bounce_2s_ease-in-out_infinite] animation-delay-500 opacity-50" style:color={$heroBackgroundColor}></span>
             </a>
         </div>
