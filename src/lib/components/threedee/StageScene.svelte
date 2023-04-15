@@ -12,7 +12,7 @@
     <T.PlaneGeometry args={[50, 50]} />
 </T.Mesh>
 
-<T.PointLight args={[undefined, 15, 50, 20]} position={[0, 5, 5]} color={$heroBackgroundColor} shadow.radius={25} castShadow />
+<T.PointLight args={[undefined, 25, 50, 20]} position={[0, 5, 5]} color={$heroBackgroundColor} shadow.radius={10} castShadow />
 
 <T.PerspectiveCamera makeDefault bind:ref={sceneCamera} position.z={25} position.y={1.5} fov={35}>
 </T.PerspectiveCamera>

@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { T, Object3DInstance, useFrame, InteractiveObject, type Position } from '@threlte/core';
+    import { T, Object3DInstance, useFrame, type Position } from '@threlte/core';
     import * as THREE from "three";
     import { createNoise3D } from 'simplex-noise';
     import { onMount } from 'svelte';

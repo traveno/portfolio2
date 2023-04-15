@@ -21,7 +21,8 @@
 <div class="absolute w-full h-screen bg-black">
     <Canvas>
         <OrbScene />
-    </Canvas></div>
+    </Canvas>
+</div>
 
 <div class="flex flex-col">
         <div class="flex flex-col h-screen justify-start items-center">
@@ -29,7 +30,7 @@
         <div class="basis-2/3"></div>
         <div class="basis-1/3">
             <a href="#2" on:click={event => { smoothScrollToId(event); $downArrowClicked = true; }}>
-                <span class="icon-[solar--alt-arrow-down-bold] w-24 h-24 cursor-pointer animate-[bounce_2s_ease-in-out_infinite] animation-delay-500 opacity-50" style:color={$heroBackgroundColor}></span>
+                <span class="icon-[solar--alt-arrow-down-bold] w-32 h-32 cursor-pointer animate-[bounce_2s_ease-in-out_infinite] animation-delay-500 opacity-50" style:color={$heroBackgroundColor}></span>
             </a>
         </div>
         {/if}
@@ -45,3 +46,14 @@
         <OtherExpertise />
     </div>
 </div>
+
+
+<style>
+    .code-bg {
+        background-image: url('/code-bg.png');
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-position: center;
+        background-color: 0x00000055;
+    }
+</style>

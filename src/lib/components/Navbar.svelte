@@ -9,6 +9,7 @@
     import OutClick from 'svelte-outclick';
 
     let infoMenuVisible = false;
+    let infoMenuButton: HTMLButtonElement;
     const arrowRef = writable<HTMLElement>();
 
     const [ floatingRef, floatingContent, update ] = createFloatingActions({
@@ -22,9 +23,6 @@
                 element: arrowRef
             })
         ],
-        autoUpdate: {
-
-        },
         onComputed({ placement, middlewareData }) {
             const x = middlewareData.arrow!['x'];
             const y = middlewareData.arrow!['y'];
@@ -71,7 +69,7 @@
             </button>
         </div>
         <div class="hidden md:block tooltip tooltip-bottom tooltip-info" data-tip="Info">
-            <button class="btn btn-square btn-ghost hover:bg-transparent" use:floatingRef on:click={() => infoMenuVisible = !infoMenuVisible}>
+            <button bind:this={infoMenuButton} class="btn btn-square btn-ghost hover:bg-transparent" use:floatingRef on:click={() => infoMenuVisible = !infoMenuVisible}>
                 <span class="icon-[tabler--info-square-rounded] w-8 h-8 text-base-content/75 hover:text-info transition-colors"></span>
             </button>
         </div>
@@ -112,7 +110,7 @@
 </div>
 
 {#if infoMenuVisible}
-<OutClick on:outclick={() => infoMenuVisible = false}>
+<OutClick excludeElements={[infoMenuButton]} on:outclick={(event) => { event.stopPropagation(); infoMenuVisible = false; console.log(event) }}>
     <div  class="z-10 p-4 rounded from-transparent/30 to-transparent/10 bg-gradient-to-b" id="tooltip" style:background-color={$heroBackgroundColor} use:floatingContent transition:fly={{ y: 10, duration: 250 }}>
         <div class="flex flex-col justify-normal">
 
@@ -139,7 +137,6 @@
     </div>
 </OutClick>
 {/if}
-
 
 <style>
     #arrow {

@@ -1,6 +1,4 @@
 <script>
-    import Demo3D from "$lib/components/threedee/demos/Demo3D.svelte";
-    import { loadingComplete } from "$lib/stores/data";
 </script>
 
 <svelte:head>
@@ -8,7 +6,6 @@
 </svelte:head>
 
 <div class="flex flex-col justify-start max-w-screen-lg mx-auto pt-40 md:pt-28">
-    <div class="divider hidden lg:flex"></div>
     <article class="prose w-full max-w-full">
         <h1 class="text-center">Hey, I'm Stephen!</h1>
     </article>

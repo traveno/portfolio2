@@ -12,6 +12,9 @@ export default {
     extend: {
       fontFamily: {
         'sans': ['Rubik', ...defaultTheme.fontFamily.sans]
+      },
+      backgroundImage: {
+        'code-pattern': "url('/code-bg.png')"
       }
     }
   }

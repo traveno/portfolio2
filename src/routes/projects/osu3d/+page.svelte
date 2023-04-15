@@ -2,12 +2,12 @@
 </script>
 
 <svelte:head>
-    <title>my projects</title>
+    <title>Stephen Fike -- Software Engineer</title>
 </svelte:head>
 
-<div class="w-full h-full bg-base-100 pt-40 md:pt-28">
+<div class="w-full h-full pt-40 md:pt-28">
     <div class="flex flex-col justify-start items-center gap-4 max-w-screen-lg mx-auto">
-        <span class="text-5xl md:text-8xl uppercase">osu3d-webapp</span>
+        <span class="text-5xl md:text-7xl">osu3d-webapp</span>
         <div class="divider mt-0"></div>
         <div class="carousel w-full lg:rounded-lg">
             <div id="img1" class="carousel-item w-full">
@@ -29,5 +29,4 @@
             <a href="#img3" class="btn btn-info">3</a>
         </div>
     </div>
-    
 </div>
