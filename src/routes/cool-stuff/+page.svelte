@@ -9,7 +9,7 @@
     <title>Stephen Fike -- Software Engineer</title>
 </svelte:head>
 
-<div class="fixed w-full h-full bg-black -z-10"></div>
+<div class="fixed w-full h-full top-0 left-0 bg-absolute"></div>
 
 <div class="relative w-full">
     <div class="absolute w-full h-screen grow flex-1 bg-black">

@@ -7,7 +7,7 @@
     <title>Stephen Fike -- Software Engineer</title>
 </svelte:head>
 
-<div class="w-full h-full bg-black">
+<div class="w-full h-full">
     <div class="flex flex-col justify-start items-center gap-4 max-w-screen-lg mx-auto py-40 md:py-28">
         <span class="text-5xl md:text-7xl">Previous Projects</span>
         <div class="divider mt-0"></div>

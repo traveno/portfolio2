@@ -2,51 +2,19 @@
     import { page } from "$app/stores";
     import { randomHexColor } from "$lib/helpers";
     import { heroBackgroundColor, unleashBalls } from "$lib/stores/data";
-    import { createFloatingActions, arrow } from 'svelte-floating-ui';
-    import { flip, offset, shift } from "svelte-floating-ui/dom";
-    import { writable } from "svelte/store";
-    import { fly } from "svelte/transition";
-    import OutClick from 'svelte-outclick';
+    import PopoverToggle from "./PopoverToggle.svelte";
+    import Popover from "./Popover.svelte";
+    import { onMount } from "svelte";
+    import { themeChange } from 'theme-change';
+    import ThemeSelect from "./ThemeSelect.svelte";
 
-    let infoMenuVisible = false;
-    let infoMenuButton: HTMLButtonElement;
-    const arrowRef = writable<HTMLElement>();
-
-    const [ floatingRef, floatingContent, update ] = createFloatingActions({
-        strategy: 'absolute',
-        placement: 'bottom',
-        middleware: [
-            offset({ mainAxis: 5 }),
-            shift({ padding: 50 }),
-            flip(),
-            arrow({
-                element: arrowRef
-            })
-        ],
-        onComputed({ placement, middlewareData }) {
-            const x = middlewareData.arrow!['x'];
-            const y = middlewareData.arrow!['y'];
-            const staticSide = {
-                top: 'bottom',
-                right: 'left',
-                bottom: 'top',
-                left: 'right'
-            }[placement.split('-')[0]];
-
-            Object.assign($arrowRef.style, {
-                left: x != null ? `${x}px` : '',
-                top: y != null ? `${y}px` : '',
-                right: '',
-                bottom: '',
-                [staticSide!]: '-4px'
-            });
-        }
-            
+    onMount(() => {
+        themeChange(false);
     });
 </script>
 
 <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-<div class="navbar px-8 py-4 bg-black">
+<div class="navbar px-8 py-4 bg-transparent">
     <div class="navbar-start">
         <div class="dropdown">
             <!-- svelte-ignore a11y-label-has-associated-control -->
@@ -63,30 +31,66 @@
         </div>
 
         <!-- Fun button -->
-        <div class="hidden md:block tooltip tooltip-bottom tooltip-warning" data-tip="Roll The Dice">
-            <button class="btn btn-square btn-ghost hover:bg-transparent" on:click={() => $heroBackgroundColor = randomHexColor()}>
+        <Popover tooltipClasses="bg-warning text-warning-content" on:click={() => $heroBackgroundColor = randomHexColor()}>
+            <div slot="activator" class="hidden md:inline-flex btn btn-square btn-ghost hover:bg-transparent">
                 <span class="icon-[ion--dice-outline] w-8 h-8 text-base-content/75 hover:text-warning transition-colors"></span>
-            </button>
-        </div>
-        <div class="hidden md:block tooltip tooltip-bottom tooltip-info" data-tip="Info">
-            <button bind:this={infoMenuButton} class="btn btn-square btn-ghost hover:bg-transparent" use:floatingRef on:click={() => infoMenuVisible = !infoMenuVisible}>
-                <span class="icon-[tabler--info-square-rounded] w-8 h-8 text-base-content/75 hover:text-info transition-colors"></span>
-            </button>
-        </div>
+            </div>
 
-        {#if $page.url.pathname === '/'}
-        <div class="hidden md:block tooltip tooltip-bottom tooltip-success" data-tip={'Party Mode'}>
-            <button class="btn btn-square btn-ghost hover:bg-transparent" on:click={() => $unleashBalls = !$unleashBalls} disabled={$page.url.pathname !== '/'}>
-                <span class="icon-[bx--party] w-8 h-8 text-base-content/75 {$unleashBalls ? 'text-success' : 'hover:text-success'} transition-colors"></span>
-            </button>
+            <span slot="tooltip">Roll The Dice</span>
+        </Popover>
+
+        <!-- App information popover -->
+        <PopoverToggle>
+            <!-- Activator -->
+            <div slot="activator" class="hidden md:inline-flex btn btn-square btn-ghost hover:bg-transparent">
+                <span class="icon-[tabler--info-square-rounded] w-8 h-8 text-base-content/75 hover:text-info transition-colors"></span>
+            </div>
+
+            <!-- Tooltip -->
+            <span slot="tooltip" class="text-info-content">Info</span>
+
+            <!-- Content -->
+            <div slot="content" class="flex flex-col justify-normal">
+                <a href="https://github.com/traveno/portfolio2" target="_blank">
+                    <div class="flex flex-row justify-center items-center w-full space-x-1">
+                        <p class="text-2xl font-mono">portfolio2</p>
+                        <span class="icon-[mdi--github] w-8 h-8"></span>
+                    </div>
+                </a>
+                <p class="text-sm italic text-center">the successor to my last portfolio</p>
+
+                <div class="divider m-0"></div>
+
+                <div class="flex flex-row justify-between items-center w-full">
+                    <p>Version date</p>
+                    <span class="p-1 px-2 bg-base-100/25 rounded font-mono">April 14, 2023</span>
+                </div>
+                
+                <div class="divider m-0"></div>
+
+                <p>
+                    Created using 
+                    <a href="https://kit.svelte.dev/" target="_blank" class="text-accent">SvelteKit</a> -
+                    <a href="https://threejs.org/" target="_blank" class="text-accent">three.js</a> -
+                    <a href="https://vercel.com/" target="_blank" class="text-accent">Vercel</a>
+                </p>
+            </div>
+        </PopoverToggle>
+
+        <!-- Fun button -->
+        <Popover tooltipClasses="bg-success text-success-content" on:click={() => $unleashBalls = !$unleashBalls} disabled={$page.url.pathname !== '/'}>
+            <div slot="activator" class="hidden md:inline-flex btn btn-square btn-ghost hover:bg-transparent">
+                <span class="icon-[bx--party] w-8 h-8 text-base-content/75 hover:text-success transition-colors"></span>
+            </div>
+
+            <span slot="tooltip">Party Mode</span>
+            <span slot="tooltip-disabled">Must be on the home page to party</span>
+        </Popover>
+
+
+        <div class="pl-2">
+            <ThemeSelect />
         </div>
-        {:else}
-        <div class="hidden md:block tooltip tooltip-bottom tooltip-info" data-tip={'Party Mode only works on the home page'}>
-            <button class="btn btn-square btn-ghost hover:bg-transparent" disabled>
-                <span class="icon-[bx--party] w-8 h-8 text-base-content/25 transition-colors"></span>
-            </button>
-        </div>
-        {/if}
 
         
     </div>
@@ -108,45 +112,3 @@
         </a>
     </div>
 </div>
-
-{#if infoMenuVisible}
-<OutClick excludeElements={[infoMenuButton]} on:outclick={(event) => { event.stopPropagation(); infoMenuVisible = false; console.log(event) }}>
-    <div  class="z-10 p-4 rounded from-transparent/30 to-transparent/10 bg-gradient-to-b" id="tooltip" style:background-color={$heroBackgroundColor} use:floatingContent transition:fly={{ y: 10, duration: 250 }}>
-        <div class="flex flex-col justify-normal">
-
-            <a href="https://github.com/traveno/portfolio2" target="_blank">
-                <div class="flex flex-row justify-center items-center w-full space-x-1">
-                    <p class="text-2xl font-mono">portfolio2</p>
-                    <span class="icon-[mdi--github] w-8 h-8"></span>
-                </div>
-            </a>
-            
-            <p class="text-sm italic text-center">the successor to my last portfolio</p>
-            <div class="divider m-0"></div>
-            <div class="flex flex-row justify-between items-center w-full">
-                <p>Version date</p>
-                <span class="p-1 px-2 bg-base-100/25 rounded font-mono">April 14, 2023</span>
-            </div>
-            
-            <div class="divider m-0"></div>
-            <p>Created using <a href="https://kit.svelte.dev/" target="_blank" class="text-accent">SvelteKit</a> -
-                <a href="https://threejs.org/" target="_blank" class="text-accent">three.js</a> -
-                <a href="https://vercel.com/" target="_blank" class="text-accent">Vercel</a></p>
-        </div>
-        <div bind:this={$arrowRef} id="arrow" style:background-color={$heroBackgroundColor} class="from-transparent/30 to-transparent/30 bg-gradient-to-b" />
-    </div>
-</OutClick>
-{/if}
-
-<style>
-    #arrow {
-        position: absolute;
-        width: 8px;
-        height: 8px;
-        transform: rotate(45deg);
-    }
-
-    #tooltip {
-        position: absolute;
-    }
-</style>

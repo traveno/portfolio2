@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { T, Object3DInstance, useFrame, type Position } from '@threlte/core';
+    import { T, Object3DInstance, useFrame, type Position, InteractiveObject, Group, OrbitControls, Fog } from '@threlte/core';
     import * as THREE from "three";
     import { createNoise3D } from 'simplex-noise';
     import { onMount } from 'svelte';
@@ -11,16 +11,31 @@
     import { Attractor, AutoColliders, Collider, RigidBody, World } from '@threlte/rapier';
     import { randomHexColor } from '$lib/helpers';
 
+    let innerWidth: number;
+    let innerHeight: number;
+
+    export let screenPosition = { x: 0, y: 0 };
+
     // For the orb part of the scene
-    let frameCount = 0;
-    const textSpacing = spring(1);
+    const textOpacity = spring(1);
+
+    const sphereScale = spring(0.5);
     let sphere = new THREE.Group();
-    sphere.position.set(0, -3.5, 0);
+    sphere.position.set(0, Device.isMobile ? 1.5 : 2.5, -5);
+    sphere.scale.set(0.5, 0.5, 0.5);
+
+    let interactGeo = new THREE.SphereGeometry(5);
+    let interactObj = new THREE.Mesh(interactGeo, new THREE.MeshBasicMaterial({ transparent: true, opacity: 0 }));
+    // interactObj.position.set(0, Device.isMobile ? 1.5 : 2.5, -5);
+    interactObj.position.set(0, 5, 0);
+    sphere.add(interactObj);
+
     let originals: THREE.Vector3[] = [];
+
     let material = new THREE.LineBasicMaterial({
         color: $heroBackgroundColor as THREE.ColorRepresentation
     });
-    $: console.log(Device.isMobile);
+    
     const noise3D = createNoise3D(Math.random);
 
     let linesAmount = 12;
@@ -48,13 +63,17 @@
             let line = new THREE.LineLoop(geometry, material);
             sphere.add(line);
         }
+
+        console.log(sphere.children);
     }
 
-    function testVertices(frameCount: number) {
+    function updateVertices() {
         const t = performance.now() / 1000;
 
-        for (let i = 0; i < sphere.children.length; i++) {
-            let line = sphere.children[i] as THREE.Line;
+        let lineLoopChildren = sphere.children.filter(c => c.type === 'LineLoop');
+
+        for (let i = 0; i < lineLoopChildren.length; i++) {
+            let line = lineLoopChildren[i] as THREE.Line;
             let lineGeometry = line.geometry as THREE.BufferGeometry;
             let lineBufferAttr = lineGeometry.attributes.position as THREE.Float32BufferAttribute;
 
@@ -102,8 +121,27 @@
         attractorPosition = position as Position;
     }
 
-    useFrame((ctx, delta) => {
-        testVertices(frameCount++);
+    function updateScreenPosition() {
+        const widthHalf = innerWidth / 2;
+        const heightHalf = innerHeight / 2;
+
+        let position = new THREE.Vector3();
+        sphere.getWorldPosition(position);
+        position.add(new THREE.Vector3(0, (radius / 2) * $sphereScale, 0));
+        position.project(sceneCamera);
+        position.x =  (position.x * widthHalf)  + widthHalf;
+        position.y = -(position.y * heightHalf) + heightHalf;
+
+        screenPosition = { x: position.x, y: position.y };
+    }
+
+    useFrame(() => {
+        updateVertices();
+        updateScreenPosition();
+
+        const t = performance.now() / 1000;
+        sphere.position.setX(Math.sin(t * 2) * 2);
+        sphere.position.setZ(Math.cos(t * 2) * 2);
     });
 
     onMount(() => {
@@ -137,29 +175,37 @@
     }
 </script>
 
+<svelte:window bind:innerWidth={innerWidth} bind:innerHeight={innerHeight} />
 <svelte:body on:mousemove={event => mouseMoved(event)} on:mouseleave={() => mouseLeave()} />
 
 <T.Mesh rotation.x={degToRad(90)} position={[0, 0, -0]} receiveShadow>
-    <T.MeshPhongMaterial color={'#222'} side={THREE.DoubleSide} />
-    <T.PlaneGeometry args={[50, 50]} />
+    <T.MeshPhongMaterial color={'#FFFFFF'} side={THREE.DoubleSide} />
+    <T.PlaneGeometry args={[100, 100]} />
 </T.Mesh>
 
 <T.PerspectiveCamera makeDefault bind:ref={sceneCamera} position.z={25} position.y={1.5} fov={35}>
+    <OrbitControls enableZoom={false} enablePan={false} maxPolarAngle={degToRad(85)} />
 </T.PerspectiveCamera>
 
+<Object3DInstance object={sphere} scale={$sphereScale}>
+    <InteractiveObject interactive object={interactObj} on:pointerenter={() => $sphereScale = 0.6} on:pointerleave={() => $sphereScale = 0.5} />
+</Object3DInstance>
+
 <Float floatIntensity={2} floatingRange={[0.25, 0.5]}>
-    <Object3DInstance object={sphere} rotation={{ x: degToRad(25) }} position={{ x: 0, y: Device.isMobile ? 1.5 : 2.5, z: -5 }} scale={0.5} />
+    <!-- <Object3DInstance object={sphere} rotation={{ x: degToRad(25) }} position={{ x: 0, y: Device.isMobile ? 1.5 : 2.5, z: -5 }} scale={0.5} /> -->
+    <!-- <T.AmbientLight args={[0xFFFFFF, 0.25]} /> -->
     <T.PointLight args={[undefined, 25, 50, 20]} position={[0, 5, 5]} color={$heroBackgroundColor} shadow.radius={10} castShadow />
     <Text
         interactive
         castShadow
-        on:pointerenter={() => $textSpacing = 0.6}
-        on:pointerleave={() => $textSpacing = 1}
+        on:pointerenter={() => $textOpacity = 0.6}
+        on:pointerleave={() => $textOpacity = 1}
         on:click={() => newText()}
         text={taglines[taglineIndex]}
+        color={0x333333}
         position={{ x: 0, y: 1.7, z: 5 }}
         rotation={{ x: degToRad(-25) }}
-        fillOpacity={$textSpacing}
+        fillOpacity={$textOpacity}
         fontSize={Device.isMobile ? 0.65 : 1.25}
         letterSpacing={Device.isMobile ? 0 : 0.15}
         font={'/fonts/Rubik/static/Rubik-Regular.ttf'}
@@ -168,6 +214,8 @@
     />
 </Float>
 
+<Fog color={0xFFFFFF} near={15} far={50} />
+
 
 {#if $unleashBalls}
 <World gravity={{ x: 0, y: 0, z: 0 }}>
@@ -175,7 +223,7 @@
     <Collider shape="ball" args={[4]} position={attractorPosition} />
 
     <!-- Cube --> 
-    <T.Group>
+    <Group>
         {#each Array(32) as _, i}
         <RigidBody position={{ x: Math.sin(Math.PI * i / 6) * 12, y: Math.cos(Math.PI * i / 6) * 12, z: (i * -2) - 50 }} scale={1} 
             linearDamping={3} lockRotations={!backgroundEnabled} lockTranslations={!backgroundEnabled}>
@@ -187,6 +235,6 @@
             </AutoColliders>
         </RigidBody>
         {/each}
-    </T.Group>
+    </Group>
 </World>
 {/if}
