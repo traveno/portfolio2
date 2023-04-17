@@ -10,7 +10,7 @@
     import Device from 'svelte-device-info';
     import { Attractor, AutoColliders, Collider, RigidBody, World } from '@threlte/rapier';
     import { randomHexColor } from '$lib/helpers';
-
+    
     let innerWidth: number;
     let innerHeight: number;
 
@@ -33,7 +33,8 @@
     let originals: THREE.Vector3[] = [];
 
     let material = new THREE.LineBasicMaterial({
-        color: $heroBackgroundColor as THREE.ColorRepresentation
+        // color: $heroBackgroundColor as THREE.ColorRepresentation
+        color: new THREE.Color('#0000ff')
     });
     
     const noise3D = createNoise3D(Math.random);
@@ -42,7 +43,7 @@
     let radius = 10;
     let verticesAmount = 50;
 
-    heroBackgroundColor.subscribe(newColor => {material.color = new THREE.Color(newColor as THREE.ColorRepresentation)});
+    // heroBackgroundColor.subscribe(newColor => {material.color = new THREE.Color(newColor as THREE.ColorRepresentation)});
 
     function createOrb() {
         for (let i = 0; i < linesAmount; i++) {

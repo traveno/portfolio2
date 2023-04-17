@@ -6,7 +6,7 @@
     import Popover from "./Popover.svelte";
     import { onMount } from "svelte";
     import { themeChange } from 'theme-change';
-    import ThemeSelect from "./ThemeSelect.svelte";
+    import ThemeSwitch from "./ThemeSwitch.svelte";
 
     onMount(() => {
         themeChange(false);
@@ -87,10 +87,7 @@
             <span slot="tooltip-disabled">Must be on the home page to party</span>
         </Popover>
 
-
-        <div class="pl-2">
-            <ThemeSelect />
-        </div>
+        <ThemeSwitch />
 
         
     </div>

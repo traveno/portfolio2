@@ -61,7 +61,7 @@ function updateVertices() {
     <title>Stephen -- Software Engineer</title>
 </svelte:head>
 
-<div class="fixed w-full h-full top-0 left-0 bg-absolute"></div>
+<!-- <div class="fixed w-full h-full top-0 left-0 bg-absolute"></div> -->
 
 <div class="absolute w-full h-full">
     <Canvas>
