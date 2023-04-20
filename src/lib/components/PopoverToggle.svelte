@@ -31,7 +31,7 @@
                 bottom: 'top',
                 left: 'right'
             }[placement.split('-')[0]];
-
+            if ($arrowRef === undefined || $arrowRef === null) return;
             Object.assign($arrowRef.style, {
                 left: x != null ? `${x}px` : '',
                 top: y != null ? `${y}px` : '',
@@ -63,7 +63,7 @@
 {#if visible || expanded}
 <OutClick excludeElements={[activator]} on:outclick={onOutsideClick}>
     <div 
-        class="z-10 rounded bg-info from-transparent/30 to-transparent/10 bg-gradient-to-b transition-transform {expanded ? 'p-4' : 'px-2 py-1'}" 
+        class="z-10 rounded bg-info from-transparent/20 to-transparent/10 bg-gradient-to-b transition-transform {expanded ? 'p-4' : 'px-2 py-1'}" 
         id="tooltip" 
         use:floatingContent 
         transition:fly={{ y: 10, duration: 250 }}
@@ -73,7 +73,7 @@
         {:else}
         <slot name="tooltip" />
         {/if}
-        <div bind:this={$arrowRef} id="arrow" class="from-transparent/30 to-transparent/30 bg-gradient-to-b bg-info" />
+        <div bind:this={$arrowRef} id="arrow" class="from-transparent/20 to-transparent/20 bg-gradient-to-b bg-info" />
     </div> 
 </OutClick>
 {/if}

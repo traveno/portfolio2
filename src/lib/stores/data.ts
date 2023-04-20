@@ -8,3 +8,6 @@ export const unleashBalls = writable<boolean>(false);
 
 // For the big arrow on front page
 export const downArrowClicked = writable<boolean>(false);
+
+// Current theme name (defaults to dark)
+export const theme = writable<'light' | 'dark'>('dark');

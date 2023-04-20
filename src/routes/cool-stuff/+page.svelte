@@ -1,7 +1,6 @@
 <script lang="ts">
-    import StageScene from "$lib/components/threedee/StageScene.svelte";
-    import Demo3D from "$lib/components/threedee/demos/Demo3D.svelte";
-    import Demo3DInteractive from "$lib/components/threedee/demos/Demo3DInteractive.svelte";
+    import Demo3D from "$lib/threedee/demos/Demo3D.svelte";
+    import Demo3DInteractive from "$lib/threedee/demos/Demo3DInteractive.svelte";
     import { Canvas } from "@threlte/core";
 </script>
 
@@ -13,9 +12,9 @@
 
 <div class="relative w-full">
     <div class="absolute w-full h-screen grow flex-1 bg-black">
-        <Canvas>
+        <!-- <Canvas>
             <StageScene />
-        </Canvas>
+        </Canvas> -->
     </div>
 
     <div class="mx-auto flex flex-col justify-start max-w-screen-lg gap-12 py-24">

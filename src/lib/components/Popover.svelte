@@ -34,7 +34,7 @@
                 bottom: 'top',
                 left: 'right'
             }[placement.split('-')[0]];
-
+            if ($arrowRef === undefined || $arrowRef === null) return;
             Object.assign($arrowRef.style, {
                 left: x != null ? `${x}px` : '',
                 top: y != null ? `${y}px` : '',
