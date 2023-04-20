@@ -8,17 +8,13 @@ export default {
   daisyui: {
     themes: [
       {
-        light: {
-          ...require('daisyui/src/colors/themes')['[data-theme=light]'],
-          '.bg-absolute': {
-            'background-color': '#FFFFFF'
-          }  
-        },
         dark: {
           ...require('daisyui/src/colors/themes')['[data-theme=dark]'],
-          '.bg-absolute': {
-            'background-color': '#000000'
-          }
+
+        },
+        light: {
+          ...require('daisyui/src/colors/themes')['[data-theme=light]'],
+
         }
       },
     ],
@@ -26,7 +22,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        'sans': ['Rubik', ...defaultTheme.fontFamily.sans]
+        'sans': ['Rubik', ...defaultTheme.fontFamily.sans],
+        'mono': ['SourceCodePro', ...defaultTheme.fontFamily.mono]
       },
       backgroundImage: {
         'code-pattern': "url('/code-bg.png')"

@@ -18,3 +18,16 @@ html, body {
     font-style: italic;
     src: url('/fonts/Rubik/Rubik-Italic-VariableFont_wght.ttf') format('truetype');
 }
+
+
+@font-face {
+    font-family: 'OverpassMono';
+    font-style: normal;
+    src: url('/fonts/OverpassMono/OverpassMono-VariableFont_wght.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'SourceCodePro';
+    font-style: normal;
+    src: url('/fonts/SourceCodePro/SourceCodePro-VariableFont_wght.ttf') format('truetype');
+}
