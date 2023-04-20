@@ -6,6 +6,8 @@
     import { onMount } from "svelte";
     import * as THREE from 'three';
 
+    export let position = { x: 0, y: 0, z: 0 };
+
     let sphere = new THREE.Group();
 
     let interactGeo = new THREE.SphereGeometry(0.6);
@@ -18,10 +20,10 @@
     let material = new THREE.LineBasicMaterial({
         fog: false,
         transparent: true,
-
+        color: srgbColor('#ff0000')
     });
 
-    $: material.color = srgbColor($heroBackgroundColor); 
+    // $: material.color = srgbColor($heroBackgroundColor); 
     
     const noise3D = createNoise3D(Math.random);
 
@@ -96,7 +98,7 @@
     });
 </script>
 
-<Object3DInstance object={sphere}>
+<Object3DInstance object={sphere} {position}>
     <T.PointLight args={[srgbColor($heroBackgroundColor), 50, 20, 15]} position={[0, 5, 0]} />
     <!-- <InteractiveObject interactive object={interactObj} /> -->
 </Object3DInstance>

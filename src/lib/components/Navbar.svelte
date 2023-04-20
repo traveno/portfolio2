@@ -1,7 +1,7 @@
 <script lang="ts">
     import { page } from "$app/stores";
     import { randomHexColor } from "$lib/helpers";
-    import { heroBackgroundColor, theme, unleashBalls } from "$lib/stores/data";
+    import { heroBackgroundColor, theme } from "$lib/stores/data";
     import PopoverToggle from "./PopoverToggle.svelte";
     import Popover from "./Popover.svelte";
     import { onMount } from "svelte";
@@ -22,11 +22,11 @@
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" /></svg>
             </label>
             <ul tabindex="0" class="menu dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52">
-                <li><a href="/"           class="bg-transparent hover:text-base-content font-mono {$page.url.pathname === '/'           ? 'text-secondary' : 'text-base-content/75'}">\\home</a></li>
-                <li><a href="/cool-stuff" class="bg-transparent hover:text-base-content font-mono {$page.url.pathname === '/cool-stuff' ? 'text-secondary' : 'text-base-content/75'}">\\ cool stuff</a></li>
-                <li><a href="/about"      class="bg-transparent hover:text-base-content font-mono {$page.url.pathname === '/about'      ? 'text-secondary' : 'text-base-content/75'}">\\ about</a></li>
-                <li><a href="/projects"   class="bg-transparent hover:text-base-content font-mono {$page.url.pathname === '/projects'   ? 'text-secondary' : 'text-base-content/75'}">\\ projects</a></li>
-                <li><a href="/contact"    class="bg-transparent hover:text-base-content font-mono {$page.url.pathname === '/contact'    ? 'text-secondary' : 'text-base-content/75'}">\\ contact me</a></li>
+                <li><a href="/"           class="bg-transparent hover:text-base-content font-mono {$page.url.pathname === '/'           ? 'text-primary' : 'text-base-content/75'}">\\home</a></li>
+                <li><a href="/cool-stuff" class="bg-transparent hover:text-base-content font-mono {$page.url.pathname === '/cool-stuff' ? 'text-primary' : 'text-base-content/75'}">\\ cool stuff</a></li>
+                <li><a href="/about"      class="bg-transparent hover:text-base-content font-mono {$page.url.pathname === '/about'      ? 'text-primary' : 'text-base-content/75'}">\\ about</a></li>
+                <li><a href="/projects"   class="bg-transparent hover:text-base-content font-mono {$page.url.pathname === '/projects'   ? 'text-primary' : 'text-base-content/75'}">\\ projects</a></li>
+                <li><a href="/contact"    class="bg-transparent hover:text-base-content font-mono {$page.url.pathname === '/contact'    ? 'text-primary' : 'text-base-content/75'}">\\ contact me</a></li>
             </ul>
         </div>
 
@@ -63,7 +63,7 @@
 
                 <div class="flex flex-row justify-between items-center w-full">
                     <p>Version date</p>
-                    <span class="p-1 px-2 bg-info-content/25 rounded font-mono">April 14, 2023</span>
+                    <span class="p-1 px-2 bg-info-content/25 rounded font-mono">April 20, 2023</span>
                 </div>
                 
                 <div class="divider before:bg-black/10 after:bg-black/10 m-0"></div>
@@ -78,7 +78,7 @@
         </PopoverToggle>
 
         <!-- Fun button -->
-        <Popover tooltipClasses="bg-success text-success-content" on:click={() => $unleashBalls = !$unleashBalls} disabled={$page.url.pathname !== '/'}>
+        <Popover tooltipClasses="bg-success text-success-content">
             <div slot="activator" class="hidden md:inline-flex btn btn-square btn-ghost hover:bg-transparent">
                 <span class="icon-[bx--party] w-8 h-8 text-base-content/75 hover:text-success transition-colors"></span>
             </div>
@@ -99,11 +99,11 @@
     </div>
     <div class="navbar-center hidden lg:flex text-base-content/50 text-lg">
         <ul class="menu menu-horizontal px-1">
-            <li><a href="/"           class="bg-transparent hover:text-base-content font-mono {$page.url.pathname === '/'           ? 'text-secondary underline underline-offset-8' : ''}">//home</a></li>
-            <li><a href="/cool-stuff" class="bg-transparent hover:text-base-content font-mono {$page.url.pathname === '/cool-stuff' ? 'text-secondary underline underline-offset-8' : ''}">//cool_stuff</a></li>
-            <li><a href="/about"      class="bg-transparent hover:text-base-content font-mono {$page.url.pathname === '/about'      ? 'text-secondary underline underline-offset-8' : ''}">//about</a></li>
-            <li><a href="/projects"   class="bg-transparent hover:text-base-content font-mono {$page.url.pathname === '/projects'   ? 'text-secondary underline underline-offset-8' : ''}">//projects</a></li>
-            <li><a href="/contact"    class="bg-transparent hover:text-base-content font-mono {$page.url.pathname === '/contact'    ? 'text-secondary underline underline-offset-8' : ''}">//contact_me</a></li>
+            <li><a href="/"           class="bg-transparent hover:text-base-content font-mono {$page.url.pathname === '/'           ? 'text-primary underline underline-offset-8' : ''}">//home</a></li>
+            <li><a href="/cool-stuff" class="bg-transparent hover:text-base-content font-mono {$page.url.pathname === '/cool-stuff' ? 'text-primary underline underline-offset-8' : ''}">//cool_stuff</a></li>
+            <li><a href="/about"      class="bg-transparent hover:text-base-content font-mono {$page.url.pathname === '/about'      ? 'text-primary underline underline-offset-8' : ''}">//about</a></li>
+            <li><a href="/projects"   class="bg-transparent hover:text-base-content font-mono {$page.url.pathname === '/projects'   ? 'text-primary underline underline-offset-8' : ''}">//projects</a></li>
+            <li><a href="/contact"    class="bg-transparent hover:text-base-content font-mono {$page.url.pathname === '/contact'    ? 'text-primary underline underline-offset-8' : ''}">//contact_me</a></li>
         </ul>
     </div>
     <div class="navbar-end gap-3">

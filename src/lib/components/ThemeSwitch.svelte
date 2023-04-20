@@ -2,8 +2,6 @@
     import { theme } from "$lib/stores/data";
 
     function toggleTheme() {
-        console.log('Theme before swap', $theme);
-
         if ($theme === 'light')
             $theme = 'dark';
         else

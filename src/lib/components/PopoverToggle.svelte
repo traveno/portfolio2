@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { heroBackgroundColor, unleashBalls } from "$lib/stores/data";
+    import { heroBackgroundColor } from "$lib/stores/data";
     import { createFloatingActions, arrow } from 'svelte-floating-ui';
     import { flip, offset, shift } from "svelte-floating-ui/dom";
     import { writable } from "svelte/store";

@@ -1,17 +1,16 @@
 <script lang="ts">
     import Demo3D from "$lib/threedee/demos/Demo3D.svelte";
     import Demo3DInteractive from "$lib/threedee/demos/Demo3DInteractive.svelte";
-    import { Canvas } from "@threlte/core";
 </script>
 
 <svelte:head>
     <title>Stephen Fike -- Software Engineer</title>
 </svelte:head>
 
-<div class="fixed w-full h-full top-0 left-0 bg-absolute"></div>
+<div class="fixed w-full h-full top-0 left-0"></div>
 
 <div class="relative w-full">
-    <div class="absolute w-full h-screen grow flex-1 bg-black">
+    <div class="absolute w-full h-screen grow flex-1">
         <!-- <Canvas>
             <StageScene />
         </Canvas> -->

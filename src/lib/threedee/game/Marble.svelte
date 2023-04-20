@@ -1,10 +1,13 @@
 <script lang="ts">
     import { srgbColor } from '$lib/helpers';
     import { heroBackgroundColor } from '$lib/stores/data';
-    import { marbleScreenPosition } from '$lib/stores/gameState';
+    import { cameraFocus, marbleScreenPos } from '$lib/stores/gameState';
     import { MeshInstance, useFrame, useTexture, useThrelte } from '@threlte/core';
+    import { useCursor } from '@threlte/extras';
     import { AutoColliders, RigidBody } from '@threlte/rapier';
     import * as THREE from 'three';
+
+    export let position = { x: 0, y: 0, z: 0 };
 
     export let gameWidth: number;
     export let gameHeight: number;
@@ -17,8 +20,8 @@
     heightMap.minFilter = displacementMap.minFilter = THREE.NearestFilter;
 
     const uniforms = {
-        iterations: { value: 48 },
-        depth: { value: 0.25 },
+        iterations: { value: 40 },
+        depth: { value: 0.15 },
         smoothing: { value: 0.3 },
         colorA: { value: srgbColor('#000000') },
         colorB: { value: srgbColor('#d719c7') },
@@ -30,7 +33,7 @@
 
     $: uniforms.colorB.value = srgbColor($heroBackgroundColor);
 
-    const marbleMaterial = new THREE.MeshStandardMaterial({ roughness: 0.15, fog: false });
+    const marbleMaterial = new THREE.MeshStandardMaterial({ roughness: 0.15, fog: false, envMapIntensity: 0.5 });
 
     marbleMaterial.onBeforeCompile = shader => {
       // Wire up local uniform references
@@ -145,18 +148,34 @@
         position.x =  (position.x * widthHalf)  + widthHalf;
         position.y = -(position.y * heightHalf) + heightHalf;
 
-        $marbleScreenPosition = { x: position.x, y: position.y };
+        $marbleScreenPos = { x: position.x, y: position.y };
+    }
+
+    function onClickMarble() {
+      cameraFocus.set({
+        position: new THREE.Vector3(position.x + 25, position.y, position.z + 25),
+        zoomLevel: 150
+      });
     }
 
     useFrame((ctx, delta) => {
         updateScreenPosition();
         uniforms.time.value += delta * 0.03;
     });
+
+    const { onPointerEnter, onPointerLeave } = useCursor('pointer', 'default');
 </script>
 
-<RigidBody>
-    <AutoColliders shape="ball">
-        <MeshInstance mesh={marble} castShadow ignorePointer={true}>
+<RigidBody {position}>
+    <AutoColliders shape="ball" mass={10}>
+        <MeshInstance 
+          interactive 
+          mesh={marble} 
+          castShadow 
+          on:click={() => onClickMarble()}
+          on:pointerenter={onPointerEnter}
+          on:pointerleave={onPointerLeave}
+        >
         </MeshInstance>
     </AutoColliders>
 </RigidBody>
