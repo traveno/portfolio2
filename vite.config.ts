@@ -115,7 +115,7 @@ const compileTimePlugin = (): Plugin => {
 
 export default defineConfig({
 	plugins: [
-		{ ...threeMinifier(), enforce: "pre" },
+		// { ...threeMinifier(), enforce: "pre" },
 		sveltekit()
 	],
 	define: {

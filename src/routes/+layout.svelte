@@ -12,7 +12,7 @@
     import { theme } from '$lib/stores/data';
     import { onMount } from 'svelte';
     import * as THREE from 'three';
-    inject({ mode: dev ? 'development' : 'production' });
+    // inject({ mode: dev ? 'development' : 'production' });
 
     export let data: LayoutServerData;
 

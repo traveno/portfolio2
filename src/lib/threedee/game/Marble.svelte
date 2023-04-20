@@ -33,8 +33,8 @@
     const marbleMaterial = new THREE.MeshStandardMaterial({ roughness: 0.15, fog: false });
 
     marbleMaterial.onBeforeCompile = shader => {
-        // Wire up local uniform references
-      shader.uniforms = { ...shader.uniforms, ...uniforms }
+      // Wire up local uniform references
+      shader.uniforms = {...shader.uniforms, ...uniforms }
       
       // Add to top of vertex shader
       shader.vertexShader = `
@@ -46,7 +46,7 @@
       shader.vertexShader = shader.vertexShader.replace(/void main\(\) {/, (match) => match + `
         v_dir = position - cameraPosition; // Points from camera to vertex
         v_pos = position;
-      `)
+      `);
       
       // Add to top of fragment shader
       shader.fragmentShader = `
