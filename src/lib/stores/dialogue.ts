@@ -6,12 +6,16 @@ export interface DialogueSequence {
 
 export const openingMessages: DialogueSequence[] = [
     {
-        message: 'Hey! We have a visitor!',
+        message: 'Hey! We have a visitor! 😁',
         duration: 3000
     },
     {
-        message: 'Stephen isn\'t here right now.',
+        message: 'Stephen isn\'t home right now.',
         duration: 3000
+    },
+    {
+        message: 'He pays me to babysit the website while he\'s gone.',
+        duration: 3000,
     },
     {
         message: 'I\'d be more than happy to give you a tour myself.',
@@ -19,10 +23,6 @@ export const openingMessages: DialogueSequence[] = [
     },
     {
         message: 'What do you say? I\'m Mr. Marble by the way.',
-        duration: 4000
-    },
-    {
-        message: 'I watch the place while he\'s gone.',
         duration: 4000
     },
     {
